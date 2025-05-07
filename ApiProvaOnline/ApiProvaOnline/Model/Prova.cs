@@ -8,6 +8,13 @@
 
         public DateTime DataHoraInicio { get; set; }
 
+        public DateTime DataHoraFim {  get; set; }
+
+        public DateTime DataHoraRegistro { get; set; }
+
+        public string Codigo { get; set; }
+
+        public int IdProfessor { get; set; }
 
     }
 }
