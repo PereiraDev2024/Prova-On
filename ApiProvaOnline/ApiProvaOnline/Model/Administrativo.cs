@@ -1,6 +1,6 @@
 ﻿namespace ApiProvaOnline.Model
 {
-    public class Teste
+    public class Administrativo
     {
     }
 }
