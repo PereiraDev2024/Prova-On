@@ -10,21 +10,39 @@ namespace ApiProvaOnline
 
         public static MySqlConnection GetConnection()
         {
+            try
+            {
+                MySqlConnection connection = new MySqlConnection(connectionstring);
 
-            MySqlConnection connection = new MySqlConnection(connectionstring);
+                connection.Open();
 
-            connection.Open();
+                return connection;
 
-            return connection;
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+        
         }
 
         public static void CloseConnection(MySqlConnection connection)
         {
-            if (connection != null && connection.State == System.Data.ConnectionState.Closed)
+            try
             {
-                connection.Close();
+                if (connection != null && connection.State == System.Data.ConnectionState.Closed)
+                {
+                    connection.Close();
+                }
             }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            
         }
 
     }
