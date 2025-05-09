@@ -7,7 +7,7 @@ namespace ApiProvaOnline.Controllers
     [Route("[controller]")]
     public class AlunoController : Controller
     {
-        [HttpGet]
+        [HttpPost("CadastrarAluno")]
         public IActionResult CadastrarAluno()
         {
             try
