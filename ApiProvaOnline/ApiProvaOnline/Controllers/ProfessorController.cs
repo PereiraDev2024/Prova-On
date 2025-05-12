@@ -56,7 +56,7 @@ namespace ApiProvaOnline.Controllers
 
         [HttpGet("BuscarProfessor")]
 
-        public IActionResult BuscarProfessor(string Id)
+        public IActionResult BuscarProfessor(int Id)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace ApiProvaOnline.Controllers
             {
                 ProfessorService service = new ProfessorService();
 
-               List<Professor> professor = service.ListarProfessores();
+                List<Professor> professor = service.ListarProfessores();
 
                 return Ok(professor);
             }
@@ -98,6 +98,29 @@ namespace ApiProvaOnline.Controllers
             }
 
 
+        }
+
+        [HttpPut("AtualizarProfessor")]
+
+        public IActionResult AtualizarProfessor([FromBody]Professor professor)
+        {
+
+            try
+            {
+                ProfessorService service = new ProfessorService();
+
+                service.AtualizarProfessor(professor);
+
+                return Ok(professor);
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest("Erro inesperado: " + ex.Message);
+            }
+        
+        
         }
 
     }

@@ -71,7 +71,7 @@ namespace ApiProvaOnline.Service
             }
 
         }
-        public Professor BuscarProfessor(string Id)
+        public Professor BuscarProfessor(int Id)
         {
 
             string sql = $"select * from Professor where Id = '{Id}'";
@@ -120,7 +120,7 @@ namespace ApiProvaOnline.Service
 
         public List<Professor> ListarProfessores()
         {
-            string sql = $"select * from Professor order by Nome ASC";
+            string sql = "select * from Professor order by Nome ASC";
 
             MySqlConnection connection = DbConnection.GetConnection();
 
@@ -167,7 +167,7 @@ namespace ApiProvaOnline.Service
         public bool AtualizarProfessor(Professor professor)
         {
 
-            string sql = $"update Professor set (Nome, Email, Senha, DataHoraRegistro) VALUES ('{professor.Nome}', '{professor.Email}','{professor.Senha}', '{professor.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}') where Id = {professor.Id}";
+            string sql = $"update Professor set Nome = '{professor.Nome}' , Email = '{professor.Email}' , Senha = '{professor.Senha}' , DataHoraRegistro = '{professor.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}'  where Id = {professor.Id}";
 
             MySqlConnection connection = DbConnection.GetConnection();
 
