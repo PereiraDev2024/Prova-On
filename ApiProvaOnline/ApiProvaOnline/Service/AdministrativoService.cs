@@ -121,7 +121,7 @@ namespace ApiProvaOnline.Service
 
             MySqlConnection connection = DbConnection.GetConnection();
 
-            List<Administrativo> administrativo = new List<Administrativo>();
+            List<Administrativo> administrativos = new List<Administrativo>();
 
             try
             {
@@ -139,7 +139,7 @@ namespace ApiProvaOnline.Service
                     administrativo.Email = reader.GetString("Email");
                     administrativo.DataHora = reader.GetDateTime("DataHora");
 
-                    administrativo.Add(administrativo);
+                    administrativos.Add(administrativo);
 
 
                 }
@@ -155,8 +155,40 @@ namespace ApiProvaOnline.Service
                 connection.Close();
 
             }
-            return administrativo;
+            return administrativos;
         }
 
+        public bool AtualizarAdministrativo(Administrativo administrativo)
+        {
+            string sql = $"update administrativo set Nome = '{administrativo.Nome}' , Email = '{administrativo.Email}' , Senha = '{administrativo.Senha}' , DataHora = '{administrativo.DataHora.ToString("yyyy-MM-dd HH:mm:ss")}' where Id = {administrativo.Id}";
+            
+            MySqlConnection connection = DbConnection.GetConnection();
+
+            try
+            {
+                MySqlCommand command = new MySqlCommand(sql, connection);
+                int LinhasAfetadas = command.ExecuteNonQuery();
+
+                if (LinhasAfetadas > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+
+                }
+            }
+
+            catch
+            {
+                throw;
+            }
+
+            finally
+            {
+                connection.Close();
+            }
+        }
     }
 }
