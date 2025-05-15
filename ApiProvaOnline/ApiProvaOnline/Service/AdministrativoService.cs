@@ -7,7 +7,7 @@ namespace ApiProvaOnline.Service
     {
         public void CadastrarAdministrativo(Administrativo administrativo)
         {
-            string sql = $"insert into Administrativo (Nome, Email, Senha, DataHora) VALUES ('{administrativo.Nome}', '{administrativo.Email}','{administrativo.Senha}', '{administrativo.DataHora.ToString("yyyy-MM-dd HH:mm:ss")}')";
+            string sql = $"insert into Administrativo (Nome, Email, Senha, DataHoraRegistro) VALUES ('{administrativo.Nome}', '{administrativo.Email}','{administrativo.Senha}', '{administrativo.DataHora.ToString("yyyy-MM-dd HH:mm:ss")}')";
 
             MySqlConnection connection = DbConnection.GetConnection();
 
@@ -90,7 +90,7 @@ namespace ApiProvaOnline.Service
                         administrativo.Id = reader.GetInt32("Id");
                         administrativo.Nome = reader.GetString("Nome");
                         administrativo.Email = reader.GetString("Email");
-                        administrativo.DataHora = reader.GetDateTime("DateTime");
+                        administrativo.DataHora = reader.GetDateTime("DataHoraRegistro");
 
                     }
 
@@ -137,7 +137,7 @@ namespace ApiProvaOnline.Service
                     administrativo.Id = reader.GetInt32("id");
                     administrativo.Nome = reader.GetString("Nome");
                     administrativo.Email = reader.GetString("Email");
-                    administrativo.DataHora = reader.GetDateTime("DataHora");
+                    administrativo.DataHora = reader.GetDateTime("DataHoraRegistro");
 
                     administrativos.Add(administrativo);
 

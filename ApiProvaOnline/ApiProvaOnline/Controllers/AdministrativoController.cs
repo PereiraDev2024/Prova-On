@@ -40,8 +40,16 @@ namespace ApiProvaOnline.Controllers
 
                 AdministrativoService service =new AdministrativoService();
 
-                return Ok(service.RemoverAdministrativo(Id));
+                bool Resultado = service.RemoverAdministrativo(Id);
 
+                if (Resultado)
+                {
+                    return Ok("Alteração realizada com sucesso!");
+                }
+                else
+                {
+                    return NotFound("Administrador não encontrado.");
+                }
 
             }
             catch (Exception ex)
@@ -80,7 +88,7 @@ namespace ApiProvaOnline.Controllers
 
         [HttpGet("ListarAdministrativo")]
 
-        public IActionResult ListarAdministrativo(int Id)
+        public IActionResult ListarAdministrativo()
         {
 
             try
@@ -102,7 +110,7 @@ namespace ApiProvaOnline.Controllers
 
         }
 
-        [HttpGet("AtualizarAdministrativo")]
+        [HttpPut("AtualizarAdministrativo")]
 
         public IActionResult AtualizarAdministrativo([FromBody] Administrativo administrativo)
         {
