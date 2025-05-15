@@ -8,7 +8,7 @@ namespace ApiProvaOnline.Service
     {
         public void CadastrarAluno(Aluno aluno)
         {
-            string sql = $"insert into Aluno (Id , Nome, DataNascimento, DataHoraRegistro, IdProva) VALUES ('{aluno.Id}','{aluno.Nome}', '{aluno.DataNascimento}', '{aluno.DataHoraRegistro}', '{aluno.IdProva}' )";
+            string sql = $"insert into Aluno (Nome, DataNascimento, DataHoraRegistro, IdProva) VALUES ('{aluno.Nome}', '{aluno.DataNascimento.ToString("yyyy-MM-dd HH:mm:ss")}', '{aluno.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}', '{aluno.IdProva}' )";
 
             MySqlConnection connection = DbConnection.GetConnection();
 
@@ -72,7 +72,7 @@ namespace ApiProvaOnline.Service
         }
 
 
-        public Aluno buscarAluno(int Id)
+        public Aluno BuscarAluno(int Id)
         {
 
             string sql = $"select * from Aluno where id = {Id}";
@@ -97,14 +97,14 @@ namespace ApiProvaOnline.Service
                     aluno.Id = reader.GetInt32("id");
                     aluno.Nome = reader.GetString("Nome");
                     aluno.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
-                    aluno.DataNascimento = reader.GetDateTime("DataHoraNascimento");
+                    aluno.DataNascimento = reader.GetDateTime("DataNascimento");
                     aluno.IdProva = reader.GetInt32("idProva");
 
-
+                
 
                 }
-
                 return aluno;
+
             }
             catch (Exception)
             {
@@ -169,7 +169,7 @@ namespace ApiProvaOnline.Service
         public bool AtualizarAluno(Aluno aluno)
         {
 
-            string sql = $"update from Aluno set Nome = '{aluno.Nome}' , Id = '{aluno.Id}' , DataHoraRegistro '{aluno.DataHoraRegistro}' , DataNascimento = '{aluno.DataNascimento}', Idprova = '{aluno.IdProva}'";
+            string sql = $"update Aluno set Nome = '{aluno.Nome}' , DataHoraRegistro =  '{aluno.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}' , DataNascimento = '{aluno.DataNascimento.ToString("yyyy-MM-dd HH:mm:ss")}', Idprova = '{aluno.IdProva}' where Id = {aluno.Id}";
 
             MySqlConnection connection = DbConnection.GetConnection();
 

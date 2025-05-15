@@ -8,7 +8,7 @@ namespace ApiProvaOnline.Service
     {
         public void CadastrarProva(Prova prova)
         {
-         string sql = $"insert into Prova (id , Titulo, DataHoraInicio, DataHoraFim, DataHoraRegistro, Codigo, IdProfessor) VALUES '{prova.Id}', '{prova.Titulo}','{prova.DataHoraInicio.ToString("yyyy-MM-dd HH:mm:ss")}','{prova.DataHoraFim.ToString("yyyy-MM-dd HH:mm:ss")}','{prova.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}','{prova.Codigo}','{prova.IdProfessor}'";
+         string sql = $"insert into Prova (Titulo, DataHoraInicio, DataHoraFim, DataHoraRegistro, Codigo, IdProfessor) VALUES ('{prova.Titulo}','{prova.DataHoraInicio.ToString("yyyy-MM-dd HH:mm:ss")}','{prova.DataHoraFim.ToString("yyyy-MM-dd HH:mm:ss")}','{prova.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}','{prova.Codigo}','{prova.IdProfessor}')";
 
          MySqlConnection connection = DbConnection.GetConnection();
 
@@ -93,6 +93,8 @@ namespace ApiProvaOnline.Service
                     prova.DataHoraInicio = reader.GetDateTime("DataHoraInicio");
                     prova.DataHoraFim = reader.GetDateTime("DataHoraFim");
                     prova.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
+                    prova.IdProfessor = reader.GetInt32("idProfessor");
+                    prova.Codigo = reader.GetString("Codigo");
 
 
                 }
@@ -161,13 +163,42 @@ namespace ApiProvaOnline.Service
 
 
         }
-        public void AtualizarProva(Prova prova)
+        public bool AtualizarProva(Prova prova)
         {
-            string sql = $"update into prova set Titulo = '{prova.Titulo}', Id = '{prova.Id}', DataHoraInicio = '{prova.DataHoraInicio}' , DataHoraFim = '{prova.DataHoraFim}' , DataHoraRegistro = '{prova.DataHoraRegistro}', Codigo = '{prova.Codigo}', IdProfessor = '{prova.IdProfessor}'";
+            string sql = $"update prova set Titulo = '{prova.Titulo}', DataHoraInicio = '{prova.DataHoraInicio.ToString("yyyy-MM-dd HH:mm:ss")}' , DataHoraFim = '{prova.DataHoraFim.ToString("yyyy-MM-dd HH:mm:ss")}' , DataHoraRegistro = '{prova.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}', Codigo = '{prova.Codigo}', IdProfessor = '{prova.IdProfessor}' where Id = '{prova.Id}' ";
 
             MySqlConnection connection = DbConnection.GetConnection();
 
+            try
+            {
+                MySqlCommand command = new MySqlCommand(sql, connection);
 
+                int LinhasAfetadas = command.ExecuteNonQuery();
+
+                if (LinhasAfetadas > 0)
+                {
+                    return true;
+
+                }
+                else
+                {
+
+                    return false;
+
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+
+                connection.Close();
+            
+            }
 
         
         }

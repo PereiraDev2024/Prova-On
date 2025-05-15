@@ -35,7 +35,19 @@ namespace ApiProvaOnline.Controllers
             {
                 AlunoService service = new AlunoService();
 
-                return Ok(service.RemoverAluno(id));
+                bool resultado = service.RemoverAluno(id);
+
+                if (resultado)
+                {
+
+                    return Ok("O Aluno foi removido");
+
+                }
+                else
+                {
+                    return BadRequest("O Aluno não foi encontrado");
+                
+                }
 
 
             }
@@ -56,7 +68,7 @@ namespace ApiProvaOnline.Controllers
             {
                 AlunoService service = new AlunoService();
 
-                Aluno aluno = service.buscarAluno(id);
+                Aluno aluno = service.BuscarAluno(id);
 
                 return Ok(aluno);
 
@@ -71,14 +83,14 @@ namespace ApiProvaOnline.Controllers
 
         [HttpGet("ListarAlunos")]
 
-        public IActionResult ListarAlunos(int id)
+        public IActionResult ListarAlunos()
         {
 
             try
             {
                 AlunoService service = new AlunoService();
 
-                List<Aluno> alunos = new List<Aluno>();
+                List<Aluno> alunos = service.ListarAluno();
 
                 return Ok(alunos);
             }
