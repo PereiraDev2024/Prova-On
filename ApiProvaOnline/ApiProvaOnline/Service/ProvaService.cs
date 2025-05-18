@@ -82,23 +82,21 @@ namespace ApiProvaOnline.Service
 
                 MySqlDataReader reader = command.ExecuteReader();
 
-                Prova prova = new Prova();
-
                 while (reader.Read())
                 {
-                    
-
-                    prova.Id = reader.GetInt32("id");
-                    prova.Titulo = reader.GetString("Titulo");
-                    prova.DataHoraInicio = reader.GetDateTime("DataHoraInicio");
-                    prova.DataHoraFim = reader.GetDateTime("DataHoraFim");
-                    prova.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
-                    prova.IdProfessor = reader.GetInt32("idProfessor");
-                    prova.Codigo = reader.GetString("Codigo");
-
-
+                    Prova prova = new Prova();
+                    {
+                        prova.Id = reader.GetInt32("id");
+                        prova.Titulo = reader.GetString("Titulo");
+                        prova.DataHoraInicio = reader.GetDateTime("DataHoraInicio");
+                        prova.DataHoraFim = reader.GetDateTime("DataHoraFim");
+                        prova.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
+                        prova.IdProfessor = reader.GetInt32("idProfessor");
+                        prova.Codigo = reader.GetString("Codigo");
+                    }
+                    return prova;
                 }
-                return prova;
+                
 
             }
             catch (Exception)

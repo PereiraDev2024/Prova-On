@@ -10,7 +10,7 @@ namespace ApiProvaOnline.Service
         public void CadastrarPergunta(Pergunta pergunta)
         {
 
-            string sql = $"insert into pergunta (titulo, descricao, pontuacao,datahoraregistro, idprova) VALUES '{pergunta.Titulo}', '{pergunta.Descricao}', '{pergunta.Pontuacao}' , '{pergunta.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}' , '{pergunta.IdProva}'";
+            string sql = $"insert into pergunta (titulo, descricao, pontuacao,datahoraregistro, idprova) VALUES ('{pergunta.Titulo}', '{pergunta.Descricao}', '{pergunta.Pontuacao}' , '{pergunta.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}' , '{pergunta.IdProva}')";
 
             MySqlConnection connection = DbConnection.GetConnection();
 
@@ -87,11 +87,12 @@ namespace ApiProvaOnline.Service
 
                 while (reader.Read())
                 {
+                    pergunta.Id = reader.GetInt32("Id");
                     pergunta.Titulo = reader.GetString("Titulo");
                     pergunta.Descricao = reader.GetString("Descricao");
                     pergunta.Pontuacao = reader.GetDouble("Pontuacao");
                     pergunta.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
-                    pergunta.IdProva = reader.GetInt32("Id");
+                    pergunta.IdProva = reader.GetInt32("Idprova");
 
                 }
                 return pergunta;
@@ -108,6 +109,87 @@ namespace ApiProvaOnline.Service
                 
             }
             return null;
+
+        }
+
+        public bool AtualizarPergunta(Pergunta pergunta)
+        { 
+            string sql = $"update pergunta set Id = '{pergunta.Id}' , Titulo = '{pergunta.Titulo}', Descricao = '{pergunta.Descricao}' , Idprova = '{pergunta.IdProva}' , pontuacao = '{pergunta.Pontuacao}' , datahoraregistro = '{pergunta.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}' where Id = '{pergunta.Id}'";
+
+            MySqlConnection connetion = DbConnection.GetConnection();
+
+            try
+            {
+
+                MySqlCommand command = new MySqlCommand(sql , connetion);
+
+                int LinhasAfetadas = command.ExecuteNonQuery();
+
+                if (LinhasAfetadas > 0)
+                {
+                    return true;
+                
+                }
+                else
+                { 
+                    return false; 
+                
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                connetion.Close();
+            }
+
+
+        }
+        public List<Pergunta> ListarPergunta()
+        {
+            string sql = "select * from Pergunta order by DataHoraRegistro";
+
+            MySqlConnection connection = DbConnection.GetConnection();
+
+            List<Pergunta> perguntas = new List<Pergunta>();
+
+            try
+            {
+                MySqlCommand command = new MySqlCommand(sql, connection);
+
+                MySqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Pergunta pergunta = new Pergunta();
+
+                    pergunta.Id = reader.GetInt32("id");
+                    pergunta.Titulo = reader.GetString("Titulo");
+                    pergunta.Descricao = reader.GetString("Descricao");
+                    pergunta.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
+                    pergunta.IdProva = reader.GetInt32("IdProva");
+                    pergunta.Pontuacao = reader.GetInt32("Pontuacao");
+
+                    perguntas.Add(pergunta);
+
+                }
+         
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            { 
+            
+                connection.Close();
+            }
+            return perguntas;
 
         }
 

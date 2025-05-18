@@ -29,8 +29,7 @@ namespace ApiProvaOnline.Controllers
         }
 
 
-        [HttpDelete]
-
+        [HttpDelete("RemoverProva")]
         public IActionResult RemoverProva(int Id)
         {
             try

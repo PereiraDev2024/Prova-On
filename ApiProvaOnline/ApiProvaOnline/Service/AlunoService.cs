@@ -93,14 +93,14 @@ namespace ApiProvaOnline.Service
                 while (reader.Read())
                 {
 
-
+                { 
                     aluno.Id = reader.GetInt32("id");
                     aluno.Nome = reader.GetString("Nome");
                     aluno.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
                     aluno.DataNascimento = reader.GetDateTime("DataNascimento");
                     aluno.IdProva = reader.GetInt32("idProva");
+                }
 
-                
 
                 }
                 return aluno;
