@@ -114,7 +114,7 @@ namespace ApiProvaOnline.Service
 
         public bool AtualizarPergunta(Pergunta pergunta)
         { 
-            string sql = $"update pergunta set Id = '{pergunta.Id}' , Titulo = '{pergunta.Titulo}', Descricao = '{pergunta.Descricao}' , Idprova = '{pergunta.IdProva}' , pontuacao = '{pergunta.Pontuacao}' , datahoraregistro = '{pergunta.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}' where Id = '{pergunta.Id}'";
+            string sql = $"update pergunta set Titulo = '{pergunta.Titulo}', Descricao = '{pergunta.Descricao}' , Idprova = '{pergunta.IdProva}' , pontuacao = '{pergunta.Pontuacao}' , datahoraregistro = '{pergunta.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}' where Id = '{pergunta.Id}'";
 
             MySqlConnection connetion = DbConnection.GetConnection();
 
