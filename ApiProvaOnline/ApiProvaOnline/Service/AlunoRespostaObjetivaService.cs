@@ -117,5 +117,39 @@ namespace ApiProvaOnline.Service
 
         }
 
+        public bool AtualizarAlunoRespostaObjetiva(AlunoRespostaObjetiva alunoRespostaObjetiva)
+        {
+            string sql = $"update AlunoRespostaObjetiva set IdAluno = '{alunoRespostaObjetiva.IdAluno}' , IdPerguntaObjetiva = '{alunoRespostaObjetiva.IdPerguntaObjetiva}', Resposta = '{alunoRespostaObjetiva.Resposta}' , PontuacaoFinal = '{alunoRespostaObjetiva.PontuacaoFinal}', DataHoraRegistro = '{alunoRespostaObjetiva.DataHorRegistro.ToString("yyyy - MM - dd HH: mm:ss")}' ";
+        
+            MySqlConnection connection = DbConnection.GetConnection();
+
+            try
+            {
+
+                MySqlCommand command = new MySqlCommand(sql, connection);
+
+                int LinhasAfetadas = command.ExecuteNonQuery();
+
+                if (LinhasAfetadas > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
     }
 }
