@@ -8,7 +8,6 @@
         public char Resposta {  get; set; }
         public double PontuacaoFinal { get; set; }
         public DateTime DataHorRegistro { get; set; }
-        public DateTime DataHoraRegistro { get; set;}
 
     }
 }
