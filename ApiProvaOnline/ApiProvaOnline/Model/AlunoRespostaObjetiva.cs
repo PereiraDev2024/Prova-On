@@ -9,5 +9,9 @@
         public double PontuacaoFinal { get; set; }
         public DateTime DataHorRegistro { get; set; }
 
+        internal void AtualizarAlunoRespostaObjetiva(object administrativo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -7,6 +7,8 @@ namespace ApiProvaOnline.Controllers
 
     [ApiController]
     [Route("[controller]")]
+
+
     public class AdministrativoController : Controller
     {
 

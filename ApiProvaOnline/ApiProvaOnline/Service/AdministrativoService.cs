@@ -190,5 +190,10 @@ namespace ApiProvaOnline.Service
                 connection.Close();
             }
         }
+
+        internal void CadastrarAlunoRespostaObjetiva(AlunoRespostaObjetiva alunoRespostaObjetiva)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
