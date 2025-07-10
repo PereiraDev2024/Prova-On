@@ -13,6 +13,8 @@ namespace ApiProvaOnline.Service
         
             MySqlConnection connection = DbConnection.GetConnection();
 
+            connection.Open();
+
             try
             {
                 MySqlCommand command = new MySqlCommand(sql, connection);

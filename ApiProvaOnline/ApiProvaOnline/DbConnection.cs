@@ -5,7 +5,7 @@ namespace ApiProvaOnline
     public static class DbConnection
     {
 
-        public static string connectionstring = "Server=localhost;Database=ProvaOn;Uid=root";
+        public static string connectionstring = "Server=localhost;Database=ProvaOn;Uid=root;pwd=sql123";
 
 
         public static MySqlConnection GetConnection()
