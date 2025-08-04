@@ -46,7 +46,7 @@ namespace ApiProvaOnline.Controllers
                 else
                 {
                     return BadRequest("O Aluno não foi encontrado");
-                
+
                 }
 
 
@@ -101,7 +101,7 @@ namespace ApiProvaOnline.Controllers
 
             }
 
-        
+
         }
         [HttpPut("AtualizarAluno")]
 
@@ -123,10 +123,38 @@ namespace ApiProvaOnline.Controllers
 
                 return BadRequest("Erro inesperado:" + ex.Message);
             }
-        
-        
+
+
+        }
+
+        [HttpGet("Historico")]
+        public ActionResult<List<HistoricoAlunoDTO>> ObterHistorico(int id)
+        {
+            try
+            {
+                AlunoService service = new AlunoService();
+
+               
+                HistoricoAlunoDTO dto = new HistoricoAlunoDTO { id = id };
+
+              
+                List<HistoricoAlunoDTO> historico = service.HistoricoDeAluno(dto);
+
+                if (historico == null || historico.Count == 0)
+                {
+                    return NotFound("Nenhum histórico encontrado para o aluno.");
+                }
+
+                return Ok(historico);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro inesperado: " + ex.Message);
+            }
         }
 
 
     }
+
 }
+

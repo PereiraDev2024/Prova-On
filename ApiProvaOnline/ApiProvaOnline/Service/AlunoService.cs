@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Transactions;
 using ApiProvaOnline.Model;
 using MySql.Data.MySqlClient;
 
@@ -46,9 +47,10 @@ namespace ApiProvaOnline.Service
                 int LinhasAfetadas = command.ExecuteNonQuery();
 
 
-                if (LinhasAfetadas > 0) {
+                if (LinhasAfetadas > 0)
+                {
 
-                   
+
                     return true;
                 }
                 else
@@ -93,13 +95,13 @@ namespace ApiProvaOnline.Service
                 while (reader.Read())
                 {
 
-                { 
-                    aluno.Id = reader.GetInt32("id");
-                    aluno.Nome = reader.GetString("Nome");
-                    aluno.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
-                    aluno.DataNascimento = reader.GetDateTime("DataNascimento");
-                    aluno.IdProva = reader.GetInt32("idProva");
-                }
+                    {
+                        aluno.Id = reader.GetInt32("id");
+                        aluno.Nome = reader.GetString("Nome");
+                        aluno.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
+                        aluno.DataNascimento = reader.GetDateTime("DataNascimento");
+                        aluno.IdProva = reader.GetInt32("idProva");
+                    }
 
 
                 }
@@ -119,7 +121,7 @@ namespace ApiProvaOnline.Service
             return null;
 
         }
-    
+
         public List<Aluno> ListarAluno()
         {
             string sql = $"select * from Aluno order by Nome ASC";
@@ -131,7 +133,7 @@ namespace ApiProvaOnline.Service
             try
             {
 
-                MySqlCommand command = new MySqlCommand(sql , connection);
+                MySqlCommand command = new MySqlCommand(sql, connection);
 
                 MySqlDataReader reader = command.ExecuteReader();
 
@@ -146,8 +148,8 @@ namespace ApiProvaOnline.Service
                     aluno.IdProva = reader.GetInt32("idProva");
 
                     alunos.Add(aluno);
-               
-                
+
+
                 }
 
             }
@@ -156,10 +158,11 @@ namespace ApiProvaOnline.Service
 
                 throw;
             }
-            finally { 
-                    
+            finally
+            {
+
                 connection.Close();
-            
+
             }
 
             return alunos;
@@ -176,7 +179,7 @@ namespace ApiProvaOnline.Service
             try
             {
 
-                MySqlCommand command = new MySqlCommand(sql , connection);
+                MySqlCommand command = new MySqlCommand(sql, connection);
 
                 int LinhasAfetadas = command.ExecuteNonQuery();
 
@@ -187,8 +190,8 @@ namespace ApiProvaOnline.Service
 
                 }
                 else
-                { 
-                
+                {
+
                     return false;
                 }
 
@@ -205,6 +208,55 @@ namespace ApiProvaOnline.Service
             }
 
         }
-    }
 
+        public List<HistoricoAlunoDTO> HistoricoDeAluno(HistoricoAlunoDTO dto)
+        {
+            List<HistoricoAlunoDTO> historico = new List<HistoricoAlunoDTO>();
+
+            string sql = $"SELECT A.Id AS IdAluno, A.Nome AS Nome, Pr.Titulo AS Prova, PO.Titulo AS Pergunta, AR.Resposta, PO.OpcaoCorreta, AR.PontuacaoFinal " +
+                         "FROM AlunoRespostaObjetiva AR " +
+                         "JOIN Aluno A ON AR.IdAluno = A.Id " +
+                         "JOIN PerguntaObjetiva PO ON AR.IdPerguntaObjetiva = PO.Id " +
+                         "JOIN Prova Pr ON PO.IdProva = Pr.Id " +
+                         $"WHERE A.Id = {dto.id} " +
+                         "ORDER BY Pr.Id, PO.Id";
+
+            MySqlConnection connection = DbConnection.GetConnection();
+
+            try
+            {
+                MySqlCommand command = new MySqlCommand(sql, connection);
+                MySqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    HistoricoAlunoDTO item = new HistoricoAlunoDTO
+                    {
+                        id = reader.GetInt32("IdAluno"),
+                        nome = reader.GetString("Nome"),
+                        prova = reader.GetString("Prova"),
+                        pergunta = reader.GetString("Pergunta"),
+                        opcaocorreta = reader.GetChar("OpcaoCorreta"),
+                        pontuacaofinal = reader.GetInt32("PontuacaoFinal")
+                        
+                    };
+
+                    historico.Add(item);
+                }
+
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao buscar histórico do aluno.", ex);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return historico;
+        }
+
+    }
 }
