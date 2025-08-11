@@ -1,0 +1,36 @@
+<head>
+  <meta charset="UTF-8" />
+  <title>Menu Lateral - Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body style="background:#f8f9fa;">
+
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+  <div class="container-fluid">
+    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+      ☰ Menu
+    </button>
+    <span class="navbar-brand mb-0 h1">Painel Administrativo</span>
+  </div>
+</nav>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel" style="width: 260px;">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <div class="list-group list-group-flush">
+      <a href="Buscarprofessoradm.html" class="list-group-item list-group-item-action">Buscar Professor</a>
+      <a href="listarprofessoradm.html" class="list-group-item list-group-item-action">Listar Professores</a>
+      <a href="cadastrarprofessoradm.html" class="list-group-item list-group-item-action">Cadastrar Professor</a>
+      <a href="Atualizarprofessoraadm.html" class="list-group-item list-group-item-action">Atualizar Professor</a>
+      <a href="Removerprofessoradm.html" class="list-group-item list-group-item-action">Remover Professor</a>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="max-width: 900px;">
+
