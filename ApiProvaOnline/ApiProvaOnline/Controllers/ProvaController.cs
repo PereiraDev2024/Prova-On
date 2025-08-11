@@ -3,10 +3,13 @@ using System.Xml;
 using System.Xml.Serialization;
 using ApiProvaOnline.Model;
 using ApiProvaOnline.Service;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiProvaOnline.Controllers
 {
+    [EnableCors("PermitirLocalhost")]
+
     public class ProvaController : Controller
     {
 
