@@ -5,6 +5,7 @@ using ApiProvaOnline.Model;
 using ApiProvaOnline.Service;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
 
 namespace ApiProvaOnline.Controllers
 {
@@ -131,5 +132,42 @@ namespace ApiProvaOnline.Controllers
         }
 
 
+        [HttpGet("ListarProvasProfessor/{professorId}")]
+        public IActionResult ListarProvasProfessor(int professorId)
+        {
+            var provas = new List<ProvasProfessorDTO>();
+
+            try
+            {
+                using var conn = DbConnection.GetConnection();
+                string sql = "SELECT id, titulo, dataHoraRegistro, codigo FROM Prova WHERE idProfessor = @idProfessor";
+
+                using var cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@idProfessor", professorId);
+
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    provas.Add(new ProvasProfessorDTO
+                    {
+                        Id = reader.GetInt32("id"),
+                        Titulo = reader.GetString("titulo"),
+                        DataHoraRegistro = reader.GetDateTime("dataHoraRegistro"),
+                        Codigo = reader.GetString("codigo")
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao listar provas: {ex.Message}");
+            }
+
+            return Ok(provas);
+        }
+
     }
+
+
 }
+

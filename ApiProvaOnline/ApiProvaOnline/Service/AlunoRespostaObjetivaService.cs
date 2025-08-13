@@ -9,7 +9,7 @@ namespace ApiProvaOnline.Service
 
         public void CadastrarAlunoRespostaObjetiva(AlunoRespostaObjetiva AlunoRespostaObjetiva)
         {
-            string sql = $"insert into (idAluno , IdPerguntaObjetiva, Resposta, PontuacaoFinal, DataHoraRegistro) VALUES ('{AlunoRespostaObjetiva.IdAluno}' , '{AlunoRespostaObjetiva.IdPerguntaObjetiva}','{AlunoRespostaObjetiva.Resposta}','{AlunoRespostaObjetiva.PontuacaoFinal}', '{AlunoRespostaObjetiva.DataHorRegistro.ToString("yyyy - MM - dd HH: mm:ss")}')";
+            string sql = $"insert into alunorespostaobjetiva (idAluno , IdPerguntaObjetiva, Resposta, PontuacaoFinal, DataHoraRegistro) VALUES ('{AlunoRespostaObjetiva.IdAluno}' , '{AlunoRespostaObjetiva.IdPerguntaObjetiva}','{AlunoRespostaObjetiva.Resposta}','{AlunoRespostaObjetiva.PontuacaoFinal}', '{AlunoRespostaObjetiva.DataHorRegistro.ToString("yyyy - MM - dd HH: mm:ss")}')";
         
             MySqlConnection connection = DbConnection.GetConnection();
 

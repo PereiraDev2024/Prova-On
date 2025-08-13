@@ -200,5 +200,50 @@ namespace ApiProvaOnline.Service
 
 
         }
+
+
+        public Professor LoginProfessor(string email, string senha)
+        {
+            string sql = $"SELECT * FROM Professor WHERE Email = '{email}' AND Senha = '{senha}'";
+
+            MySqlConnection connection = DbConnection.GetConnection();
+
+            try
+            {
+                MySqlCommand command = new MySqlCommand(sql, connection);
+                MySqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    Professor professor = new Professor
+                    {
+                        Id = reader.GetInt32("Id"),
+                        Nome = reader.GetString("Nome"),
+                        Email = reader.GetString("Email"),
+                        Senha = reader.GetString("Senha"), // você pode optar por não retornar a senha na resposta da API
+                        DataHoraRegistro = reader.GetDateTime("DataHoraRegistro")
+                    };
+
+                    return professor;
+                }
+
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+
+
     }
+
+
+
+
 }

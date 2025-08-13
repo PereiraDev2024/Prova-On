@@ -7,7 +7,7 @@ namespace ApiProvaOnline.Service
     {
         public void CadastrarPerguntaObjetiva(PerguntaObjetiva perguntaObjetiva)
         {
-            string sql = $"insert into perguntaobjetiva (Titulo, Descricao, OpcaoA, OpcaoB, OpcaoC, OpcaoD, OpcaoCorreta, Pontuacao, DataHoraRegistro, Idprova) VALUES ('{perguntaObjetiva.Titulo}' , '{perguntaObjetiva.Descricao}','{perguntaObjetiva.OpcaoA}','{perguntaObjetiva.OpcaoB}', '{perguntaObjetiva.OpcaoC}','{perguntaObjetiva.OpcaoD}','{perguntaObjetiva.OpcaoCorreta}', '{perguntaObjetiva.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}', '{perguntaObjetiva.IdProva}')";
+            string sql = $"insert into perguntaobjetiva (Titulo, Descricao, OpcaoA, OpcaoB, OpcaoC, OpcaoD, OpcaoCorreta, Pontuacao, DataHoraRegistro, Idprova) VALUES ('{perguntaObjetiva.Titulo}' , '{perguntaObjetiva.Descricao}','{perguntaObjetiva.OpcaoA}','{perguntaObjetiva.OpcaoB}', '{perguntaObjetiva.OpcaoC}','{perguntaObjetiva.OpcaoD}','{perguntaObjetiva.OpcaoCorreta}', '{perguntaObjetiva.Pontuacao}' , '{perguntaObjetiva.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}', '{perguntaObjetiva.IdProva}')";
 
          
             MySqlConnection connection = DbConnection.GetConnection();

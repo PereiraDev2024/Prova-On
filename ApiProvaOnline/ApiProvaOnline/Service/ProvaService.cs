@@ -1,6 +1,7 @@
 ﻿using ApiProvaOnline.Model;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
 
 namespace ApiProvaOnline.Service
 {
@@ -8,30 +9,32 @@ namespace ApiProvaOnline.Service
     {
         public void CadastrarProva(Prova prova)
         {
-         string sql = $"insert into Prova (Titulo, DataHoraInicio, DataHoraFim, DataHoraRegistro, Codigo, IdProfessor) VALUES ('{prova.Titulo}','{prova.DataHoraInicio.ToString("yyyy-MM-dd HH:mm:ss")}','{prova.DataHoraFim.ToString("yyyy-MM-dd HH:mm:ss")}','{prova.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}','{prova.Codigo}','{prova.IdProfessor}')";
+            string sql = $@"
+        INSERT INTO Prova (Titulo, DataHoraInicio, DataHoraFim, DataHoraRegistro, Codigo, IdProfessor) 
+        VALUES ('{prova.Titulo}', '{prova.DataHoraInicio:yyyy-MM-dd HH:mm:ss}', '{prova.DataHoraFim:yyyy-MM-dd HH:mm:ss}', '{prova.DataHoraRegistro:yyyy-MM-dd HH:mm:ss}', '{prova.Codigo}', '{prova.IdProfessor}');
+        SELECT LAST_INSERT_ID();";
 
-         MySqlConnection connection = DbConnection.GetConnection();
+            MySqlConnection connection = DbConnection.GetConnection();
 
             try
             {
                 MySqlCommand command = new MySqlCommand(sql, connection);
 
-                command.ExecuteNonQuery();
+                // Executa e pega o ID gerado
+                var idGerado = Convert.ToInt32(command.ExecuteScalar());
 
-
+                prova.Id = idGerado;
             }
             catch (Exception)
             {
-
                 throw;
             }
-            finally 
-            { 
+            finally
+            {
                 connection.Close();
-            
             }
-        
         }
+
         public bool RemoverProva(int id)
         {
 
