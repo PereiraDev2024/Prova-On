@@ -16,7 +16,7 @@ function carregarmenu() {
 
 function carregaroffcanvas(){
 
-    fetch('offcanvas.html')
+    fetch('offcanvasprofessor.html')
     .then(response => response.text())
     .then(html => {
 
@@ -50,8 +50,22 @@ function carregaroffcanvasadm(){
 
 }
 
+function carregaroffcanvasaluno(){
+
+    fetch('offcanvasaluno.html')
+    .then(response => response.text())
+    .then(html => {
+        document.getElementById('offcanvasaluno').innerHTML = html;
+    })
+    .catch(error => {
+
+        console.log("Algo de inesperado aconteceu");
+
+    })
+}
 
 
 carregarmenu();
 carregaroffcanvas();
 carregaroffcanvasadm();
+carregaroffcanvasaluno();
