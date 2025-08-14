@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prova de Português</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!-- IMask -->
+<script src="https://unpkg.com/imask"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body style="background-color:#ede7f6; font-family: 'Roboto', sans-serif;">
+
+<div id="timer" style="position:fixed; top:20px; right:30px; background-color:#673ab7; color:#fff; padding:8px 15px; border-radius:8px; font-weight:bold; font-size:16px; z-index:1000;">60:00</div>
+
+<div class="container py-5">
+  <div style="max-width:700px; margin:auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0px 2px 8px rgba(0,0,0,0.15);">
+    <div class="text-center mb-4">
+      <img src="imagens/logo_provaon.png" alt="Logo ProvaOn" style="max-width:90px;">
+      <h2 style="font-weight:bold; margin-top:10px;">Prova de Português</h2>
+      <p style="color:#5f6368; font-size:14px;">Responda todas as questões. Tempo estimado: 60 minutos.</p>
+    </div>
+
+    <form id="formProva">
+      <div class="mb-3">
+        <label style="font-weight:500;">1. Assinale a alternativa que contém apenas palavras oxítonas:</label>
+        <select class="form-select" name="q1" required style="border-radius:8px;">
+          <option value="">Selecione...</option>
+          <option value="a">Café, cipó, troféu</option>
+          <option value="b">Mesa, livro, cadeira</option>
+          <option value="c">Carro, menino, escola</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label style="font-weight:500;">2. Qual é o plural de "cidadão"?</label>
+        <input type="text" class="form-control" name="q2" required style="border-radius:8px;">
+      </div>
+
+      <div class="mb-3">
+        <label style="font-weight:500;">3. Qual frase está correta?</label>
+        <select class="form-select" name="q3" required style="border-radius:8px;">
+          <option value="">Selecione...</option>
+          <option value="a">Os aluno estudam bastante.</option>
+          <option value="b">Os alunos estudam bastante.</option>
+          <option value="c">Os aluno estuda bastante.</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label style="font-weight:500;">4. Complete: "A ____ é a parte da gramática que estuda a formação das palavras."</label>
+        <input type="text" class="form-control" name="q4" required style="border-radius:8px;">
+      </div>
+
+      <div class="mb-3">
+        <label style="font-weight:500;">5. Aponte a alternativa com um advérbio de tempo:</label>
+        <select class="form-select" name="q5" required style="border-radius:8px;">
+          <option value="">Selecione...</option>
+          <option value="a">Ontem</option>
+          <option value="b">Bonito</option>
+          <option value="c">Correr</option>
+        </select>
+      </div>
+
+      <!-- Perguntas Discursivas -->
+      <div class="mb-3">
+        <label style="font-weight:500;">6. Explique a diferença entre oração e período.</label>
+        <textarea class="form-control" name="q6" rows="3" required style="border-radius:8px;"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label style="font-weight:500;">7. Crie uma frase usando um verbo no pretérito perfeito.</label>
+        <textarea class="form-control" name="q7" rows="3" required style="border-radius:8px;"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label style="font-weight:500;">8. Dê três exemplos de pronomes pessoais do caso reto.</label>
+        <textarea class="form-control" name="q8" rows="3" required style="border-radius:8px;"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label style="font-weight:500;">9. Escreva um pequeno parágrafo (3 linhas) descrevendo um lugar que você gosta.</label>
+        <textarea class="form-control" name="q9" rows="4" required style="border-radius:8px;"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label style="font-weight:500;">10. Qual a importância da leitura para o desenvolvimento da escrita?</label>
+        <textarea class="form-control" name="q10" rows="4" required style="border-radius:8px;"></textarea>
+      </div>
+
+      <div class="text-center mt-4">
+        <button type="submit" class="btn" style="background-color:#673ab7; color:#fff; padding:10px 30px; border-radius:8px; font-weight:500;">Enviar</button>
+        <button type="reset" class="btn" style="background-color:#fff; color:#673ab7; border:1px solid #673ab7; padding:10px 30px; border-radius:8px; font-weight:500; margin-left:10px;">Limpar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+window.onload = function() {
+  // Pergunta inicial para iniciar a prova
+  Swal.fire({
+    title: 'Deseja iniciar a prova?',
+    text: "Você terá 60 minutos para completá-la.",
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Sim',
+    cancelButtonText: 'Não',
+    allowOutsideClick: false,
+    allowEscapeKey: false
+  }).then((result) => {
+    if(!result.isConfirmed){
+      window.location.href = 'CodigoAcessoProva.html';
+    } else {
+      iniciarTimer();
+    }
+  });
+}
+
+let totalSegundos = 60*60; // 60 minutos
+let intervalo;
+function iniciarTimer(){
+  const timerElemento = document.getElementById('timer');
+  intervalo = setInterval(function(){
+    const minutos = Math.floor(totalSegundos/60);
+    const segundos = totalSegundos%60;
+    timerElemento.textContent = `${String(minutos).padStart(2,'0')}:${String(segundos).padStart(2,'0')}`;
+    if(totalSegundos<=0){
+      clearInterval(intervalo);
+      Swal.fire({
+        icon:'info',
+        title:'Tempo esgotado!',
+        text:'O tempo da prova terminou.',
+        confirmButtonColor:'#673ab7'
+      });
+      document.getElementById('formProva').querySelectorAll('input,textarea,select,button').forEach(el=>el.disabled=true);
+    }
+    totalSegundos--;
+  },1000);
+}
+
+// Envio via Axios com SweetAlert2
+document.getElementById('formProva').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const dados = new FormData(this);
+  const jsonData = {};
+  dados.forEach((valor,chave)=> jsonData[chave]=valor);
+  try{
+    await axios.post('https://exemplo.com/enviar-prova', jsonData);
+    Swal.fire({
+      icon:'success',
+      title:'Prova enviada!',
+      text:'Sua prova foi enviada com sucesso.',
+      confirmButtonColor:'#673ab7'
+    });
+  } catch(err){
+    Swal.fire({
+      icon:'error',
+      title:'Erro!',
+      text:'Ocorreu um erro ao enviar a prova.',
+      confirmButtonColor:'#673ab7'
+    });
+  }
+});
+</script>
+</body>
+</html>
