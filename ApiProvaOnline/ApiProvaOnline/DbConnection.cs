@@ -1,49 +1,13 @@
-﻿using MySql.Data.MySqlClient;
+// This file is kept for reference only.
+// The application now uses Entity Framework Core via ProvaOnDbContext.
+// See Infrastructure/Data/ProvaOnDbContext.cs and Program.cs for the new configuration.
 
 namespace ApiProvaOnline
 {
+    [Obsolete("Use ProvaOnDbContext via dependency injection instead.")]
     public static class DbConnection
     {
-
-        public static string connectionstring = "Server=localhost;Database=ProvaOn;Uid=root;pwd=sql123";
-
-
-        public static MySqlConnection GetConnection()
-        {
-            try
-            {
-                MySqlConnection connection = new MySqlConnection(connectionstring);
-
-                connection.Open();
-
-                return connection;
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        
-        }
-
-        public static void CloseConnection(MySqlConnection connection)
-        {
-            try
-            {
-                if (connection != null && connection.State == System.Data.ConnectionState.Closed)
-                {
-                    connection.Close();
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-            
-        }
-
+        public static string ConnectionString => throw new InvalidOperationException(
+            "DbConnection is obsolete. Use ProvaOnDbContext via dependency injection.");
     }
 }

@@ -1,199 +1,58 @@
-﻿using ApiProvaOnline.Model;
-using MySql.Data.MySqlClient;
+using ApiProvaOnline.Application.Interfaces;
+using ApiProvaOnline.Model;
 
 namespace ApiProvaOnline.Service
 {
     public class AdministrativoService
     {
-        public void CadastrarAdministrativo(Administrativo administrativo)
+        private readonly IAdministrativoRepository _repository;
+
+        public AdministrativoService(IAdministrativoRepository repository)
         {
-            string sql = $"insert into Administrativo (Nome, Email, Senha, DataHoraRegistro) VALUES ('{administrativo.Nome}', '{administrativo.Email}','{administrativo.Senha}', '{administrativo.DataHora.ToString("yyyy-MM-dd HH:mm:ss")}')";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                command.ExecuteNonQuery();
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-
-            }
-
-            finally
-            {
-                connection.Close();
-            }
-
+            _repository = repository;
         }
 
-        public bool RemoverAdministrativo(int Id)
+        public async Task CadastrarAdministrativoAsync(Administrativo administrativo)
         {
-            string sql = $"delete from Administrativo where id = '{Id}'";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                int LinhasAfetadas = command.ExecuteNonQuery();
-
-                if (LinhasAfetadas > 0)
-                {
-
-                    return true;
-
-                }
-                else
-                {
-
-                    return false;
-
-                }
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-
-            }
-
-            finally
-            {
-                connection.Close();
-            }
+            administrativo.DataHoraRegistro = DateTime.Now;
+            await _repository.AddAsync(administrativo);
+            await _repository.SaveChangesAsync();
         }
 
-        public Administrativo BuscarAdministrativo(int Id)
+        public async Task<bool> RemoverAdministrativoAsync(int id)
         {
-            string sql = $"select * from Administrativo where id = '{Id}'";
+            var administrativo = await _repository.GetByIdAsync(id);
+            if (administrativo == null) return false;
 
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                MySqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Administrativo administrativo = new Administrativo();
-                    {
-                        administrativo.Id = reader.GetInt32("Id");
-                        administrativo.Nome = reader.GetString("Nome");
-                        administrativo.Email = reader.GetString("Email");
-                        administrativo.DataHora = reader.GetDateTime("DataHoraRegistro");
-
-                    }
-
-                    return administrativo;
-
-                }
-
-            }
-
-            catch (Exception)
-            {
-
-                throw;
-
-            }
-
-            finally
-            {
-                connection.Close();
-            }
-
-            return null;
+            _repository.Remove(administrativo);
+            await _repository.SaveChangesAsync();
+            return true;
         }
 
-        public List<Administrativo> ListarAdministrativo()
+        public async Task<Administrativo?> BuscarAdministrativoAsync(int id)
         {
-            string sql = $"select * from Administrativo order by Nome ASC";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            List<Administrativo> administrativos = new List<Administrativo>();
-
-            try
-            {
-
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                MySqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Administrativo administrativo = new Administrativo();
-
-                    administrativo.Id = reader.GetInt32("id");
-                    administrativo.Nome = reader.GetString("Nome");
-                    administrativo.Email = reader.GetString("Email");
-                    administrativo.DataHora = reader.GetDateTime("DataHoraRegistro");
-
-                    administrativos.Add(administrativo);
-
-
-                }
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                connection.Close();
-
-            }
-            return administrativos;
+            return await _repository.GetByIdAsync(id);
         }
 
-        public bool AtualizarAdministrativo(Administrativo administrativo)
+        public async Task<IEnumerable<Administrativo>> ListarAdministrativoAsync()
         {
-            string sql = $"update administrativo set Nome = '{administrativo.Nome}' , Email = '{administrativo.Email}' , Senha = '{administrativo.Senha}' , DataHora = '{administrativo.DataHora.ToString("yyyy-MM-dd HH:mm:ss")}' where Id = {administrativo.Id}";
-            
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-                MySqlCommand command = new MySqlCommand(sql, connection);
-                int LinhasAfetadas = command.ExecuteNonQuery();
-
-                if (LinhasAfetadas > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-
-                }
-            }
-
-            catch
-            {
-                throw;
-            }
-
-            finally
-            {
-                connection.Close();
-            }
+            var administrativos = await _repository.GetAllAsync();
+            return administrativos.OrderBy(a => a.Nome);
         }
 
-        internal void CadastrarAlunoRespostaObjetiva(AlunoRespostaObjetiva alunoRespostaObjetiva)
+        public async Task<bool> AtualizarAdministrativoAsync(Administrativo administrativo)
         {
-            throw new NotImplementedException();
+            var existente = await _repository.GetByIdAsync(administrativo.Id);
+            if (existente == null) return false;
+
+            existente.Nome = administrativo.Nome;
+            existente.Email = administrativo.Email;
+            existente.Senha = administrativo.Senha;
+            existente.DataHoraRegistro = administrativo.DataHoraRegistro;
+
+            _repository.Update(existente);
+            await _repository.SaveChangesAsync();
+            return true;
         }
     }
 }

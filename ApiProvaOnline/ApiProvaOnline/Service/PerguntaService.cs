@@ -1,198 +1,64 @@
-﻿using System.Security.Cryptography.X509Certificates;
+using ApiProvaOnline.Application.Interfaces;
 using ApiProvaOnline.Model;
-using MySql.Data.MySqlClient;
 
 namespace ApiProvaOnline.Service
 {
     public class PerguntaService
     {
+        private readonly IPerguntaRepository _repository;
 
-        public void CadastrarPergunta(Pergunta pergunta)
+        public PerguntaService(IPerguntaRepository repository)
         {
-
-            string sql = $"insert into pergunta (titulo, descricao, pontuacao,datahoraregistro, idprova) VALUES ('{pergunta.Titulo}', '{pergunta.Descricao}', '{pergunta.Pontuacao}' , '{pergunta.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}' , '{pergunta.IdProva}')";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                command.ExecuteNonQuery();
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-
-                connection.Close();
-
-            }
-        }        
-        public bool RemoverPergunta(int id)
-        {
-            string sql = $"delete from pergunta where id = '{id}'";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                int LinhasAfetadas = command.ExecuteNonQuery();
-
-                if (LinhasAfetadas > 0)
-                {
-
-                    return true;
-
-                }
-                else
-                {
-                    return false;
-
-                }
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally 
-            {
-                connection.Close();
-            
-            }
-        }
-        public Pergunta BuscarPergunta(int Id)
-        {
-            string sql = $"select * from Pergunta where id = '{Id}'";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                MySqlDataReader reader = command.ExecuteReader();
-
-                Pergunta pergunta = new Pergunta();
-
-                while (reader.Read())
-                {
-                    pergunta.Id = reader.GetInt32("Id");
-                    pergunta.Titulo = reader.GetString("Titulo");
-                    pergunta.Descricao = reader.GetString("Descricao");
-                    pergunta.Pontuacao = reader.GetDouble("Pontuacao");
-                    pergunta.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
-                    pergunta.IdProva = reader.GetInt32("Idprova");
-
-                }
-                return pergunta;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            { 
-            
-                connection.Close();
-                
-            }
-            return null;
-
+            _repository = repository;
         }
 
-        public bool AtualizarPergunta(Pergunta pergunta)
-        { 
-            string sql = $"update pergunta set Titulo = '{pergunta.Titulo}', Descricao = '{pergunta.Descricao}' , Idprova = '{pergunta.IdProva}' , pontuacao = '{pergunta.Pontuacao}' , datahoraregistro = '{pergunta.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}' where Id = '{pergunta.Id}'";
-
-            MySqlConnection connetion = DbConnection.GetConnection();
-
-            try
-            {
-
-                MySqlCommand command = new MySqlCommand(sql , connetion);
-
-                int LinhasAfetadas = command.ExecuteNonQuery();
-
-                if (LinhasAfetadas > 0)
-                {
-                    return true;
-                
-                }
-                else
-                { 
-                    return false; 
-                
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                connetion.Close();
-            }
-
-
-        }
-        public List<Pergunta> ListarPergunta()
+        public async Task CadastrarPerguntaAsync(Pergunta pergunta)
         {
-            string sql = "select * from Pergunta order by DataHoraRegistro";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            List<Pergunta> perguntas = new List<Pergunta>();
-
-            try
-            {
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                MySqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Pergunta pergunta = new Pergunta();
-
-                    pergunta.Id = reader.GetInt32("id");
-                    pergunta.Titulo = reader.GetString("Titulo");
-                    pergunta.Descricao = reader.GetString("Descricao");
-                    pergunta.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
-                    pergunta.IdProva = reader.GetInt32("IdProva");
-                    pergunta.Pontuacao = reader.GetInt32("Pontuacao");
-
-                    perguntas.Add(pergunta);
-
-                }
-         
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            { 
-            
-                connection.Close();
-            }
-            return perguntas;
-
+            pergunta.DataHoraRegistro = DateTime.Now;
+            await _repository.AddAsync(pergunta);
+            await _repository.SaveChangesAsync();
         }
 
+        public async Task<bool> RemoverPerguntaAsync(int id)
+        {
+            var pergunta = await _repository.GetByIdAsync(id);
+            if (pergunta == null) return false;
+
+            _repository.Remove(pergunta);
+            await _repository.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<Pergunta?> BuscarPerguntaAsync(int id)
+        {
+            return await _repository.GetByIdAsync(id);
+        }
+
+        public async Task<IEnumerable<Pergunta>> ListarPerguntaAsync()
+        {
+            var perguntas = await _repository.GetAllAsync();
+            return perguntas.OrderBy(p => p.DataHoraRegistro);
+        }
+
+        public async Task<IEnumerable<Pergunta>> ListarPorProvaAsync(int provaId)
+        {
+            return await _repository.GetByProvaIdAsync(provaId);
+        }
+
+        public async Task<bool> AtualizarPerguntaAsync(Pergunta pergunta)
+        {
+            var existente = await _repository.GetByIdAsync(pergunta.Id);
+            if (existente == null) return false;
+
+            existente.Titulo = pergunta.Titulo;
+            existente.Descricao = pergunta.Descricao;
+            existente.Pontuacao = pergunta.Pontuacao;
+            existente.DataHoraRegistro = pergunta.DataHoraRegistro;
+            existente.IdProva = pergunta.IdProva;
+
+            _repository.Update(existente);
+            await _repository.SaveChangesAsync();
+            return true;
+        }
     }
-
 }

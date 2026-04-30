@@ -1,20 +1,21 @@
-﻿using System.Globalization;
-
 namespace ApiProvaOnline.Model
 {
     public class PerguntaObjetiva
     {
         public int Id { get; set; }
-        public string Titulo { get; set; }
-        public string Descricao { get; set; }
-        public string OpcaoA {  get; set; }
-        public string OpcaoB { get; set; }  
-        public string OpcaoC { get; set; }
-        public string OpcaoD { get; set; }
+        public string Titulo { get; set; } = string.Empty;
+        public string Descricao { get; set; } = string.Empty;
+        public string OpcaoA { get; set; } = string.Empty;
+        public string OpcaoB { get; set; } = string.Empty;
+        public string OpcaoC { get; set; } = string.Empty;
+        public string OpcaoD { get; set; } = string.Empty;
         public char OpcaoCorreta { get; set; }
         public double Pontuacao { get; set; }
         public DateTime DataHoraRegistro { get; set; }
-        public int IdProva {  get; set; }
+        public int IdProva { get; set; }
 
+        // Navigation properties
+        public Prova? Prova { get; set; }
+        public ICollection<AlunoRespostaObjetiva> RespostasObjetivas { get; set; } = new List<AlunoRespostaObjetiva>();
     }
 }

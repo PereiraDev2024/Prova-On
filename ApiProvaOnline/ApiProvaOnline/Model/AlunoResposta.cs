@@ -1,19 +1,21 @@
-﻿namespace ApiProvaOnline.Model
+namespace ApiProvaOnline.Model
 {
     public class AlunoResposta
     {
-
         public int Id { get; set; }
 
         public int IdAluno { get; set; }
 
         public int IdPergunta { get; set; }
 
-        public string Resposta { get; set; }
+        public string Resposta { get; set; } = string.Empty;
 
-        public string PontuacaoFinal { get; set; }
+        public double PontuacaoFinal { get; set; }
 
         public DateTime DataHoraRegistro { get; set; }
 
+        // Navigation properties
+        public Aluno? Aluno { get; set; }
+        public Pergunta? Pergunta { get; set; }
     }
 }

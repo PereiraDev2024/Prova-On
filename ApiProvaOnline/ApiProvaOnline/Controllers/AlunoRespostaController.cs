@@ -1,53 +1,44 @@
-﻿using ApiProvaOnline.Model;
+using ApiProvaOnline.Model;
 using ApiProvaOnline.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiProvaOnline.Controllers
 {
-    public class AlunoRespostaController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    public class AlunoRespostaController : ControllerBase
     {
+        private readonly AlunoRespostaService _service;
+
+        public AlunoRespostaController(AlunoRespostaService service)
+        {
+            _service = service;
+        }
+
         [HttpPost("CadastrarAlunoResposta")]
-        public IActionResult CadastrarAlunoResposta([FromBody] AlunoResposta alunoResposta)
+        public async Task<IActionResult> CadastrarAlunoResposta([FromBody] AlunoResposta alunoResposta)
         {
             try
             {
-                AlunoRespostaService service = new AlunoRespostaService();
-
-                service.CadastrarAlunoResposta(alunoResposta);
-
+                await _service.CadastrarAlunoRespostaAsync(alunoResposta);
                 return Ok(alunoResposta);
-
             }
             catch (Exception ex)
             {
-                
                 return BadRequest("Erro inesperado: " + ex.Message);
-
             }
- 
         }
 
         [HttpDelete("RemoverAlunoResposta")]
-
-        public IActionResult RemoverAlunoResposta(int id)
+        public async Task<IActionResult> RemoverAlunoResposta(int id)
         {
             try
             {
-                AlunoRespostaService service = new AlunoRespostaService();
-
-                bool Resultado = service.RemoverAlunoResposta(id);
-
-                if (Resultado)
-                {
-                    return Ok(Resultado);
-
-                }
+                bool resultado = await _service.RemoverAlunoRespostaAsync(id);
+                if (resultado)
+                    return Ok(resultado);
                 else
-                { 
-                
                     return NotFound("Resposta não encontrada");
-                
-                }
             }
             catch (Exception ex)
             {
@@ -56,61 +47,35 @@ namespace ApiProvaOnline.Controllers
         }
 
         [HttpGet("BuscarAlunoResposta")]
-
-        public IActionResult BuscarAlunoResposta(int id)
+        public async Task<IActionResult> BuscarAlunoResposta(int id)
         {
             try
             {
-                AlunoRespostaService service = new AlunoRespostaService();
-
-                AlunoResposta alunoResposta = service.BuscarAlunoResposta(id);
-
-                return Ok(alunoResposta);
-
+                var resposta = await _service.BuscarAlunoRespostaAsync(id);
+                if (resposta == null) return NotFound();
+                return Ok(resposta);
             }
             catch (Exception ex)
             {
-
                 return BadRequest("Erro inesperado: " + ex.Message);
-                
             }
-            
-        
         }
 
         [HttpPut("AtualizarAlunoResposta")]
-
-        public IActionResult AtualizarAlunoResposta([FromBody] AlunoResposta alunoResposta)
+        public async Task<IActionResult> AtualizarAlunoResposta([FromBody] AlunoResposta alunoResposta)
         {
-
             try
             {
-                AlunoRespostaService service = new AlunoRespostaService();
-
-                bool Resultado = service.AtualizarAlunoResposta(alunoResposta);
-
-                if (Resultado)
-                {
-
-                    return Ok(Resultado);
-
-                }
+                bool resultado = await _service.AtualizarAlunoRespostaAsync(alunoResposta);
+                if (resultado)
+                    return Ok(resultado);
                 else
-                {
-
                     return NotFound("Resposta não encontrada");
-
-                }
-
             }
             catch (Exception ex)
             {
                 return BadRequest("Erro inesperado: " + ex.Message);
             }
-          
-        
-        
         }
-    
     }
 }

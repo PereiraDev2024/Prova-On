@@ -1,4 +1,4 @@
-﻿using ApiProvaOnline.Model;
+using ApiProvaOnline.Model;
 using ApiProvaOnline.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,146 +6,22 @@ namespace ApiProvaOnline.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AlunoController : Controller
+    public class AlunoController : ControllerBase
     {
+        private readonly AlunoService _service;
+
+        public AlunoController(AlunoService service)
+        {
+            _service = service;
+        }
+
         [HttpPost("CadastrarAluno")]
-        public IActionResult CadastrarAluno([FromBody] Aluno aluno)
+        public async Task<IActionResult> CadastrarAluno([FromBody] Aluno aluno)
         {
             try
             {
-                AlunoService service = new AlunoService();
-
-                service.CadastrarAluno(aluno);
-
+                await _service.CadastrarAlunoAsync(aluno);
                 return Ok(aluno);
-
-            }
-            catch (Exception ex)
-            {
-
-                return BadRequest("Erro inesperado:" + ex.Message);
-            }
-
-        }
-        [HttpDelete("RemoverAluno")]
-
-        public IActionResult RemoverAluno(int id)
-        {
-            try
-            {
-                AlunoService service = new AlunoService();
-
-                bool resultado = service.RemoverAluno(id);
-
-                if (resultado)
-                {
-
-                    return Ok("O Aluno foi removido");
-
-                }
-                else
-                {
-                    return BadRequest("O Aluno não foi encontrado");
-
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Erro inesperado:" + ex.Message);
-
-            }
-
-
-        }
-
-        [HttpGet("BuscarAluno")]
-
-        public IActionResult BuscarAluno(int id)
-        {
-            try
-            {
-                AlunoService service = new AlunoService();
-
-                Aluno aluno = service.BuscarAluno(id);
-
-                return Ok(aluno);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Erro inesperado:" + ex.Message);
-
-            }
-
-        }
-
-        [HttpGet("ListarAlunos")]
-
-        public IActionResult ListarAlunos()
-        {
-
-            try
-            {
-                AlunoService service = new AlunoService();
-
-                List<Aluno> alunos = service.ListarAluno();
-
-                return Ok(alunos);
-            }
-            catch (Exception ex)
-            {
-
-                return BadRequest("Erro inesperado:" + ex.Message);
-
-            }
-
-
-        }
-        [HttpPut("AtualizarAluno")]
-
-        public IActionResult AtualizarAluno(Aluno alunos)
-        {
-
-            try
-            {
-                AlunoService service = new AlunoService();
-
-                service.AtualizarAluno(alunos);
-
-                return Ok(alunos);
-
-
-            }
-            catch (Exception ex)
-            {
-
-                return BadRequest("Erro inesperado:" + ex.Message);
-            }
-
-
-        }
-
-        [HttpGet("Historico")]
-        public ActionResult<List<HistoricoAlunoDTO>> ObterHistorico(int id)
-        {
-            try
-            {
-                AlunoService service = new AlunoService();
-
-               
-                HistoricoAlunoDTO dto = new HistoricoAlunoDTO { id = id };
-
-              
-                List<HistoricoAlunoDTO> historico = service.HistoricoDeAluno(dto);
-
-                if (historico == null || historico.Count == 0)
-                {
-                    return NotFound("Nenhum histórico encontrado para o aluno.");
-                }
-
-                return Ok(historico);
             }
             catch (Exception ex)
             {
@@ -153,8 +29,81 @@ namespace ApiProvaOnline.Controllers
             }
         }
 
+        [HttpDelete("RemoverAluno")]
+        public async Task<IActionResult> RemoverAluno(int id)
+        {
+            try
+            {
+                bool resultado = await _service.RemoverAlunoAsync(id);
+                if (resultado)
+                    return Ok("O Aluno foi removido");
+                else
+                    return BadRequest("O Aluno não foi encontrado");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro inesperado: " + ex.Message);
+            }
+        }
 
+        [HttpGet("BuscarAluno")]
+        public async Task<IActionResult> BuscarAluno(int id)
+        {
+            try
+            {
+                var aluno = await _service.BuscarAlunoAsync(id);
+                if (aluno == null) return NotFound();
+                return Ok(aluno);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro inesperado: " + ex.Message);
+            }
+        }
+
+        [HttpGet("ListarAlunos")]
+        public async Task<IActionResult> ListarAlunos()
+        {
+            try
+            {
+                var alunos = await _service.ListarAlunoAsync();
+                return Ok(alunos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro inesperado: " + ex.Message);
+            }
+        }
+
+        [HttpPut("AtualizarAluno")]
+        public async Task<IActionResult> AtualizarAluno([FromBody] Aluno aluno)
+        {
+            try
+            {
+                await _service.AtualizarAlunoAsync(aluno);
+                return Ok(aluno);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro inesperado: " + ex.Message);
+            }
+        }
+
+        [HttpGet("Historico")]
+        public async Task<ActionResult<IEnumerable<HistoricoAlunoDTO>>> ObterHistorico(int id)
+        {
+            try
+            {
+                var historico = await _service.HistoricoDeAlunoAsync(id);
+                var lista = historico.ToList();
+                if (lista.Count == 0)
+                    return NotFound("Nenhum histórico encontrado para o aluno.");
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro inesperado: " + ex.Message);
+            }
+        }
     }
-
 }
-
