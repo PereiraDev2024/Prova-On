@@ -1,157 +1,70 @@
-﻿using System.Security.Cryptography.X509Certificates;
+using ApiProvaOnline.Application.Interfaces;
 using ApiProvaOnline.Model;
-using MySql.Data.MySqlClient;
 
 namespace ApiProvaOnline.Service
 {
     public class AlunoRespostaObjetivaService
     {
+        private readonly IAlunoRespostaObjetivaRepository _repository;
+        private readonly IPerguntaObjetivaRepository _perguntaRepository;
 
-        public void CadastrarAlunoRespostaObjetiva(AlunoRespostaObjetiva AlunoRespostaObjetiva)
+        public AlunoRespostaObjetivaService(
+            IAlunoRespostaObjetivaRepository repository,
+            IPerguntaObjetivaRepository perguntaRepository)
         {
-            string sql = $"insert into alunorespostaobjetiva (idAluno , IdPerguntaObjetiva, Resposta, PontuacaoFinal, DataHoraRegistro) VALUES ('{AlunoRespostaObjetiva.IdAluno}' , '{AlunoRespostaObjetiva.IdPerguntaObjetiva}','{AlunoRespostaObjetiva.Resposta}','{AlunoRespostaObjetiva.PontuacaoFinal}', '{AlunoRespostaObjetiva.DataHorRegistro.ToString("yyyy - MM - dd HH: mm:ss")}')";
-        
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            connection.Open();
-
-            try
-            {
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                command.ExecuteNonQuery();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            { 
-            
-                connection.Close();
-                
-            }
-        }
-        public bool RemoverAlunoRespostaObjetiva(int id)
-        {
-            string sql = $"delete * from alunorespostaobjetiva where id = {id}";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-                MySqlCommand command = new MySqlCommand(sql , connection);
-                
-                int LinhasAfetadas = command.ExecuteNonQuery();
-
-                if (LinhasAfetadas > 0)
-                {
-                    return true;
-
-                }
-                else
-                {
-                    return false;
-                
-                }
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-
-                connection.Close();
-
-            }
-        }
-        public AlunoRespostaObjetiva BuscarAlunoRespostaObjetiva(int id)
-        {
-            string sql = $"select * from AlunoRespostaObjetiva where id = {id}";
-            
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-                
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                MySqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-
-                    AlunoRespostaObjetiva alunoRespostaObjetiva = new AlunoRespostaObjetiva();
-                    {
-                        alunoRespostaObjetiva.Id = reader.GetInt32("id");
-                        alunoRespostaObjetiva.IdPerguntaObjetiva = reader.GetInt32("idPerguntaObjetiva");
-                        alunoRespostaObjetiva.DataHorRegistro = reader.GetDateTime("DataHoraRegistro");
-                        alunoRespostaObjetiva.PontuacaoFinal = reader.GetChar("PontuacaoFinal");
-                        alunoRespostaObjetiva.IdAluno = reader.GetInt32("IdAluno");
-                        alunoRespostaObjetiva.Resposta = reader.GetChar("Resposta");
-
-                        return alunoRespostaObjetiva;
-
-                    }
-
-                
-                }
-                
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            { 
-                
-                connection.Close(); 
-            
-            
-            }
-            return null;
-
+            _repository = repository;
+            _perguntaRepository = perguntaRepository;
         }
 
-        public bool AtualizarAlunoRespostaObjetiva(AlunoRespostaObjetiva alunoRespostaObjetiva)
+        public async Task CadastrarAlunoRespostaObjetivaAsync(AlunoRespostaObjetiva alunoRespostaObjetiva)
         {
-            string sql = $"update AlunoRespostaObjetiva set IdAluno = '{alunoRespostaObjetiva.IdAluno}' , IdPerguntaObjetiva = '{alunoRespostaObjetiva.IdPerguntaObjetiva}', Resposta = '{alunoRespostaObjetiva.Resposta}' , PontuacaoFinal = '{alunoRespostaObjetiva.PontuacaoFinal}', DataHoraRegistro = '{alunoRespostaObjetiva.DataHorRegistro.ToString("yyyy - MM - dd HH: mm:ss")}' ";
-        
-            MySqlConnection connection = DbConnection.GetConnection();
+            alunoRespostaObjetiva.DataHorRegistro = DateTime.Now;
 
-            try
+            var pergunta = await _perguntaRepository.GetByIdAsync(alunoRespostaObjetiva.IdPerguntaObjetiva);
+            if (pergunta != null)
             {
-
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                int LinhasAfetadas = command.ExecuteNonQuery();
-
-                if (LinhasAfetadas > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
+                var acertou = char.ToUpper(alunoRespostaObjetiva.Resposta) == char.ToUpper(pergunta.OpcaoCorreta);
+                alunoRespostaObjetiva.PontuacaoFinal = acertou ? pergunta.Pontuacao : 0;
             }
-            catch (Exception)
-            {
 
-                throw;
-            }
-            finally
-            {
-                connection.Close();
-            }
+            await _repository.AddAsync(alunoRespostaObjetiva);
+            await _repository.SaveChangesAsync();
         }
 
+        public async Task<bool> RemoverAlunoRespostaObjetivaAsync(int id)
+        {
+            var resposta = await _repository.GetByIdAsync(id);
+            if (resposta == null) return false;
+
+            _repository.Remove(resposta);
+            await _repository.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<AlunoRespostaObjetiva?> BuscarAlunoRespostaObjetivaAsync(int id)
+        {
+            return await _repository.GetByIdAsync(id);
+        }
+
+        public async Task<bool> AtualizarAlunoRespostaObjetivaAsync(AlunoRespostaObjetiva alunoRespostaObjetiva)
+        {
+            var existente = await _repository.GetByIdAsync(alunoRespostaObjetiva.Id);
+            if (existente == null) return false;
+
+            existente.IdAluno = alunoRespostaObjetiva.IdAluno;
+            existente.IdPerguntaObjetiva = alunoRespostaObjetiva.IdPerguntaObjetiva;
+            existente.Resposta = alunoRespostaObjetiva.Resposta;
+            existente.PontuacaoFinal = alunoRespostaObjetiva.PontuacaoFinal;
+            existente.DataHorRegistro = alunoRespostaObjetiva.DataHorRegistro;
+
+            _repository.Update(existente);
+            await _repository.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<IEnumerable<AlunoRespostaObjetiva>> ListarPorAlunoAsync(int alunoId)
+        {
+            return await _repository.GetByAlunoIdAsync(alunoId);
+        }
     }
 }

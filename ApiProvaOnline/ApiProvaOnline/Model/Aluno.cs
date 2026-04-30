@@ -1,11 +1,10 @@
-﻿namespace ApiProvaOnline.Model
+namespace ApiProvaOnline.Model
 {
     public class Aluno
     {
-
         public int Id { get; set; }
 
-        public string Nome { get; set; }
+        public string Nome { get; set; } = string.Empty;
 
         public DateTime DataNascimento { get; set; }
 
@@ -13,5 +12,9 @@
 
         public int IdProva { get; set; }
 
+        // Navigation properties
+        public Prova? Prova { get; set; }
+        public ICollection<AlunoRespostaObjetiva> RespostasObjetivas { get; set; } = new List<AlunoRespostaObjetiva>();
+        public ICollection<AlunoResposta> Respostas { get; set; } = new List<AlunoResposta>();
     }
 }

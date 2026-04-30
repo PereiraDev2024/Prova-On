@@ -1,121 +1,106 @@
-﻿using ApiProvaOnline.Model;
+using ApiProvaOnline.Model;
 using ApiProvaOnline.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiProvaOnline.Controllers
 {
-    public class PerguntaController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    public class PerguntaController : ControllerBase
     {
+        private readonly PerguntaService _service;
+
+        public PerguntaController(PerguntaService service)
+        {
+            _service = service;
+        }
 
         [HttpPost("CadastrarPergunta")]
-        public IActionResult CadastrarPergunta([FromBody]Pergunta pergunta)
+        public async Task<IActionResult> CadastrarPergunta([FromBody] Pergunta pergunta)
         {
             try
             {
-                PerguntaService service = new PerguntaService();
-
-                service.CadastrarPergunta(pergunta);
-
+                await _service.CadastrarPerguntaAsync(pergunta);
                 return Ok(pergunta);
-
             }
             catch (Exception ex)
             {
-
-                return BadRequest("Erro inesperado: " + ex);
+                return BadRequest("Erro inesperado: " + ex.Message);
             }
-
         }
 
         [HttpDelete("DeletarPergunta")]
-        public IActionResult RemoverPergunta(int Id)
+        public async Task<IActionResult> RemoverPergunta(int Id)
         {
             try
             {
-                PerguntaService service = new PerguntaService();
-
-                bool Resultado = service.RemoverPergunta(Id);
-
-                if (Resultado == true)
-                {
-
+                bool resultado = await _service.RemoverPerguntaAsync(Id);
+                if (resultado)
                     return Ok("Pergunta removida com sucesso");
-
-
-                }
                 else
-                { 
-               
                     return NotFound("Pergunta não encontrada");
-                }
-
             }
             catch (Exception ex)
             {
-
-                return BadRequest("Erro inesperado: " + ex);
-
+                return BadRequest("Erro inesperado: " + ex.Message);
             }
-        
-        
         }
 
         [HttpGet("BuscarPergunta")]
-
-        public IActionResult BuscarPergunta(int id)
+        public async Task<IActionResult> BuscarPergunta(int id)
         {
             try
             {
-                PerguntaService service = new PerguntaService();
-
-                Pergunta pergunta = service.BuscarPergunta(id);
-
+                var pergunta = await _service.BuscarPerguntaAsync(id);
+                if (pergunta == null) return NotFound();
                 return Ok(pergunta);
             }
             catch (Exception ex)
             {
-                return BadRequest("Erro inesperado: " + ex);
+                return BadRequest("Erro inesperado: " + ex.Message);
             }
-       
         }
 
         [HttpGet("ListarPergunta")]
-
-        public IActionResult ListarPergunta()
+        public async Task<IActionResult> ListarPergunta()
         {
             try
             {
-                PerguntaService service = new PerguntaService();
-
-                List<Pergunta> pergunta = service.ListarPergunta();
-
-                return Ok(pergunta);
+                var perguntas = await _service.ListarPerguntaAsync();
+                return Ok(perguntas);
             }
             catch (Exception ex)
             {
-                return BadRequest("Erro inesperado: " + ex);
+                return BadRequest("Erro inesperado: " + ex.Message);
             }
-    
-        
+        }
+
+        [HttpGet("ListarPorProva/{provaId}")]
+        public async Task<IActionResult> ListarPorProva(int provaId)
+        {
+            try
+            {
+                var perguntas = await _service.ListarPorProvaAsync(provaId);
+                return Ok(perguntas);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro inesperado: " + ex.Message);
+            }
         }
 
         [HttpPut("AtualizarPergunta")]
-
-        public IActionResult AtualizarPergunta([FromBody] Pergunta pergunta)
+        public async Task<IActionResult> AtualizarPergunta([FromBody] Pergunta pergunta)
         {
             try
             {
-                PerguntaService service = new PerguntaService();
-
-                service.AtualizarPergunta(pergunta);
-
+                await _service.AtualizarPerguntaAsync(pergunta);
                 return Ok(pergunta);
             }
             catch (Exception ex)
             {
-                return BadRequest("Erro inesperado: " + ex);
+                return BadRequest("Erro inesperado: " + ex.Message);
             }
         }
     }
-
 }

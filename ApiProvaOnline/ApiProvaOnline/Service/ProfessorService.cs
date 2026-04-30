@@ -1,249 +1,63 @@
-﻿using System.Data;
-using System.Security.Cryptography.X509Certificates;
+using ApiProvaOnline.Application.Interfaces;
 using ApiProvaOnline.Model;
-using MySql.Data.MySqlClient;
 
 namespace ApiProvaOnline.Service
 {
     public class ProfessorService
     {
-        public void CadastrarProfessor(Professor professor)
+        private readonly IProfessorRepository _repository;
+
+        public ProfessorService(IProfessorRepository repository)
         {
-            string sql = $"insert into Professor (Nome, Email, Senha, DataHoraRegistro) VALUES ('{professor.Nome}', '{professor.Email}','{professor.Senha}', '{professor.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}')";
-
-
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-
-
-            try
-            {
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                command.ExecuteNonQuery();
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-
-            }
-            finally
-            {
-                connection.Close();
-            }
-        }
-        public bool RemoverProfessor(int Id)
-        {
-            string sql = $"delete from Professor where Id = '{Id}'";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-
-            try
-            {
-
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                int LinhasAfetadas = command.ExecuteNonQuery();
-
-                if (LinhasAfetadas > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                connection.Close();
-
-            }
-
-        }
-        public Professor BuscarProfessor(int Id)
-        {
-
-            string sql = $"select * from Professor where Id = '{Id}'";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                MySqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Professor professor = new Professor();
-
-                    {
-                        professor.Id = reader.GetInt32("id");
-                        professor.Nome = reader.GetString("Nome");
-                        professor.Email = reader.GetString("Email");
-                        professor.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
-
-
-                    }
-
-                    return professor;
-
-                }
-
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                connection.Close();
-
-            }
-            return null;
-
+            _repository = repository;
         }
 
-        public List<Professor> ListarProfessores()
+        public async Task CadastrarProfessorAsync(Professor professor)
         {
-            string sql = "select * from Professor order by Nome ASC";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            List<Professor> professores = new List<Professor>();
-
-            try
-            {
-
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                MySqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Professor professor = new Professor();
-
-                    professor.Id = reader.GetInt32("id");
-                    professor.Nome = reader.GetString("Nome");
-                    professor.Email = reader.GetString("Email");
-                    professor.DataHoraRegistro = reader.GetDateTime("DataHoraRegistro");
-
-                    professores.Add(professor);
-
-
-                }
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                connection.Close();
-
-            }
-            return professores;
-
-
-
+            professor.DataHoraRegistro = DateTime.Now;
+            await _repository.AddAsync(professor);
+            await _repository.SaveChangesAsync();
         }
 
-        public bool AtualizarProfessor(Professor professor)
+        public async Task<bool> RemoverProfessorAsync(int id)
         {
+            var professor = await _repository.GetByIdAsync(id);
+            if (professor == null) return false;
 
-            string sql = $"update Professor set Nome = '{professor.Nome}' , Email = '{professor.Email}' , Senha = '{professor.Senha}' , DataHoraRegistro = '{professor.DataHoraRegistro.ToString("yyyy-MM-dd HH:mm:ss")}'  where Id = {professor.Id}";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-                MySqlCommand command = new MySqlCommand(sql, connection);
-
-                int LinhasAfetadas = command.ExecuteNonQuery();
-
-                if (LinhasAfetadas > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                connection.Close();
-
-            }
-
-
+            _repository.Remove(professor);
+            await _repository.SaveChangesAsync();
+            return true;
         }
 
-
-        public Professor LoginProfessor(string email, string senha)
+        public async Task<Professor?> BuscarProfessorAsync(int id)
         {
-            string sql = $"SELECT * FROM Professor WHERE Email = '{email}' AND Senha = '{senha}'";
-
-            MySqlConnection connection = DbConnection.GetConnection();
-
-            try
-            {
-                MySqlCommand command = new MySqlCommand(sql, connection);
-                MySqlDataReader reader = command.ExecuteReader();
-
-                if (reader.Read())
-                {
-                    Professor professor = new Professor
-                    {
-                        Id = reader.GetInt32("Id"),
-                        Nome = reader.GetString("Nome"),
-                        Email = reader.GetString("Email"),
-                        Senha = reader.GetString("Senha"), // você pode optar por não retornar a senha na resposta da API
-                        DataHoraRegistro = reader.GetDateTime("DataHoraRegistro")
-                    };
-
-                    return professor;
-                }
-
-                return null;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                connection.Close();
-            }
+            return await _repository.GetByIdAsync(id);
         }
 
+        public async Task<IEnumerable<Professor>> ListarProfessoresAsync()
+        {
+            var professores = await _repository.GetAllAsync();
+            return professores.OrderBy(p => p.Nome);
+        }
 
+        public async Task<bool> AtualizarProfessorAsync(Professor professor)
+        {
+            var existente = await _repository.GetByIdAsync(professor.Id);
+            if (existente == null) return false;
 
+            existente.Nome = professor.Nome;
+            existente.Email = professor.Email;
+            existente.Senha = professor.Senha;
+            existente.DataHoraRegistro = professor.DataHoraRegistro;
+
+            _repository.Update(existente);
+            await _repository.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<Professor?> LoginProfessorAsync(string email, string senha)
+        {
+            return await _repository.LoginAsync(email, senha);
+        }
     }
-
-
-
-
 }

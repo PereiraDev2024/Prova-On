@@ -1,34 +1,32 @@
-﻿using ApiProvaOnline.Model;
+using ApiProvaOnline.Model;
 using ApiProvaOnline.Service;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiProvaOnline.Controllers
 {
-
     [ApiController]
     [Route("[controller]")]
-    public class ProfessorController : Controller
+    public class ProfessorController : ControllerBase
     {
-        private readonly ProfessorService _service = new ProfessorService();
+        private readonly ProfessorService _service;
+
+        public ProfessorController(ProfessorService service)
+        {
+            _service = service;
+        }
 
         [HttpPost("LoginProfessor")]
-        public IActionResult Login([FromBody] Model.LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Senha))
-            {
                 return BadRequest(new { mensagem = "Email e senha são obrigatórios." });
-            }
 
-            var professor = _service.LoginProfessor(request.Email, request.Senha);
+            var professor = await _service.LoginProfessorAsync(request.Email, request.Senha);
 
             if (professor == null)
-            {
                 return Unauthorized(new { mensagem = "Credenciais inválidas." });
-            }
 
-            // Opcional: Remover a senha do retorno
-            professor.Senha = null;
+            professor.Senha = string.Empty;
 
             return Ok(new
             {
@@ -37,122 +35,74 @@ namespace ApiProvaOnline.Controllers
             });
         }
 
-
-
         [HttpPost("CadastrarProfessor")]
-        public IActionResult CadastrarProfessor([FromBody] Professor professor)
+        public async Task<IActionResult> CadastrarProfessor([FromBody] Professor professor)
         {
             try
             {
-                ProfessorService service = new ProfessorService();
-
-                service.CadastrarProfessor(professor);
-
+                await _service.CadastrarProfessorAsync(professor);
                 return Ok(professor);
-
-
             }
             catch (Exception ex)
             {
-                return BadRequest("Erro inesperado:" + ex.Message);
-
+                return BadRequest("Erro inesperado: " + ex.Message);
             }
         }
 
         [HttpDelete("RemoverProfessor")]
-
-        public IActionResult RemoverProfessor(int Id)
+        public async Task<IActionResult> RemoverProfessor(int Id)
         {
             try
             {
-                ProfessorService service = new ProfessorService();
-
-                return Ok(service.RemoverProfessor(Id));
-
-
-
+                return Ok(await _service.RemoverProfessorAsync(Id));
             }
             catch (Exception ex)
             {
-
-                return BadRequest("Erro inesperado:" + ex.Message);
-
+                return BadRequest("Erro inesperado: " + ex.Message);
             }
-
-
         }
-
 
         [HttpGet("BuscarProfessor")]
-
-        public IActionResult BuscarProfessor(int Id)
+        public async Task<IActionResult> BuscarProfessor(int Id)
         {
             try
             {
-                ProfessorService service = new ProfessorService();
-
-                Professor professor = service.BuscarProfessor(Id);
-
+                var professor = await _service.BuscarProfessorAsync(Id);
+                if (professor == null) return NotFound();
                 return Ok(professor);
-
             }
             catch (Exception ex)
             {
-
-                return BadRequest("Erro inesperado:" + ex.Message);
-
+                return BadRequest("Erro inesperado: " + ex.Message);
             }
-
         }
 
-
-
         [HttpGet("ListarProfessor")]
-
-        public IActionResult ListarProfessor()
+        public async Task<IActionResult> ListarProfessor()
         {
             try
             {
-                ProfessorService service = new ProfessorService();
-
-                List<Professor> professor = service.ListarProfessores();
-
-                return Ok(professor);
+                var professores = await _service.ListarProfessoresAsync();
+                return Ok(professores);
             }
             catch (Exception ex)
             {
-
                 return BadRequest("Erro inesperado: " + ex.Message);
-
             }
-
-
         }
 
         [HttpPut("AtualizarProfessor")]
-
-        public IActionResult AtualizarProfessor([FromBody]Professor professor)
+        public async Task<IActionResult> AtualizarProfessor([FromBody] Professor professor)
         {
-
             try
             {
-                ProfessorService service = new ProfessorService();
-
-                service.AtualizarProfessor(professor);
-
+                await _service.AtualizarProfessorAsync(professor);
                 return Ok(professor);
-
             }
             catch (Exception ex)
             {
-
                 return BadRequest("Erro inesperado: " + ex.Message);
             }
-        
-        
         }
-
     }
-
 }
-     
