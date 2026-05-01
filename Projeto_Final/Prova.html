@@ -54,7 +54,8 @@ if (!provaId || !alunoId) {
 }
 
 let perguntas = [];
-let totalSegundos = 60 * 60;
+const EXAM_DURATION_SECONDS = 60 * 60;
+let totalSegundos = EXAM_DURATION_SECONDS;
 let intervalo;
 
 async function carregarPerguntas() {
@@ -183,10 +184,12 @@ async function enviarProva() {
       text: 'Ocorreu um erro ao enviar a prova. Tente novamente.',
       confirmButtonColor: '#673ab7'
     });
-    // Reabilita para nova tentativa
+    // Reabilita para nova tentativa apenas se o tempo ainda não expirou
     document.querySelectorAll('input[type=radio]').forEach(el => el.disabled = false);
     document.getElementById('btnEnviar').disabled = false;
-    iniciarTimer();
+    if (totalSegundos > 0) {
+      iniciarTimer();
+    }
   }
 }
 
