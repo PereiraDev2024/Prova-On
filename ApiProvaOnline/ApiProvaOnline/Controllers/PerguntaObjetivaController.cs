@@ -81,7 +81,18 @@ namespace ApiProvaOnline.Controllers
             try
             {
                 var perguntas = await _service.ListarPorProvaAsync(provaId);
-                return Ok(perguntas);
+                var dto = perguntas.Select(p => new ListarPerguntarProvaDTO
+                {
+                    id = p.Id,
+                    titulo = p.Titulo,
+                    descricao = p.Descricao,
+                    opcaoa = p.OpcaoA,
+                    opcaob = p.OpcaoB,
+                    opcaoc = p.OpcaoC,
+                    opcaod = p.OpcaoD,
+                    pontuacao = p.Pontuacao
+                });
+                return Ok(dto);
             }
             catch (Exception ex)
             {

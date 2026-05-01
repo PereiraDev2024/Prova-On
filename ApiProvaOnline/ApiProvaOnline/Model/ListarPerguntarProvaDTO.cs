@@ -4,16 +4,18 @@
     {
         public int id { get; set; }
 
-        public string titulo { get; set; }
+        public string titulo { get; set; } = string.Empty;
 
-        public char opcaoa { get; set; }
+        public string descricao { get; set; } = string.Empty;
 
-        public char opcaob { get; set; }
+        public string opcaoa { get; set; } = string.Empty;
 
-        public char opcaoc { get; set; }
+        public string opcaob { get; set; } = string.Empty;
 
-        public char opcaod { get; set;}
+        public string opcaoc { get; set; } = string.Empty;
 
+        public string opcaod { get; set; } = string.Empty;
 
+        public double pontuacao { get; set; }
     }
 }

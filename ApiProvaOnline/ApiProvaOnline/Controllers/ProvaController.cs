@@ -104,5 +104,20 @@ namespace ApiProvaOnline.Controllers
                 return StatusCode(500, $"Erro ao listar provas: {ex.Message}");
             }
         }
+
+        [HttpGet("BuscarProvaPorCodigo/{codigo}")]
+        public async Task<IActionResult> BuscarProvaPorCodigo(string codigo)
+        {
+            try
+            {
+                var prova = await _service.BuscarProvaPorCodigoAsync(codigo);
+                if (prova == null) return NotFound("Código de acesso inválido.");
+                return Ok(prova);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro inesperado: " + ex.Message);
+            }
+        }
     }
 }
