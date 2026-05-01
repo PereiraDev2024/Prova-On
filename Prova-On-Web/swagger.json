@@ -1,0 +1,1555 @@
+﻿{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ApiProvaOnline",
+    "version": "1.0"
+  },
+  "paths": {
+    "/Administrativo/CadastrarAdministrativo": {
+      "post": {
+        "tags": [
+          "Administrativo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Administrativo"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Administrativo"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Administrativo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Administrativo/RemoverAdministrativo": {
+      "delete": {
+        "tags": [
+          "Administrativo"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Administrativo/BuscarAdministrativo": {
+      "get": {
+        "tags": [
+          "Administrativo"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Administrativo/ListarAdministrativo": {
+      "get": {
+        "tags": [
+          "Administrativo"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Administrativo/AtualizarAdministrativo": {
+      "put": {
+        "tags": [
+          "Administrativo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Administrativo"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Administrativo"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Administrativo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Aluno/CadastrarAluno": {
+      "post": {
+        "tags": [
+          "Aluno"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Aluno"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Aluno"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Aluno"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Aluno/RemoverAluno": {
+      "delete": {
+        "tags": [
+          "Aluno"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Aluno/BuscarAluno": {
+      "get": {
+        "tags": [
+          "Aluno"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Aluno/ListarAlunos": {
+      "get": {
+        "tags": [
+          "Aluno"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Aluno/AtualizarAluno": {
+      "put": {
+        "tags": [
+          "Aluno"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Aluno"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Aluno"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Aluno"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Aluno/Historico": {
+      "get": {
+        "tags": [
+          "Aluno"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HistoricoAlunoDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HistoricoAlunoDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HistoricoAlunoDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Aluno/ListarAlunosPorProva/{provaId}": {
+      "get": {
+        "tags": [
+          "Aluno"
+        ],
+        "parameters": [
+          {
+            "name": "provaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/AlunoResposta/CadastrarAlunoResposta": {
+      "post": {
+        "tags": [
+          "AlunoResposta"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoResposta"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoResposta"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoResposta"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/AlunoResposta/RemoverAlunoResposta": {
+      "delete": {
+        "tags": [
+          "AlunoResposta"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/AlunoResposta/BuscarAlunoResposta": {
+      "get": {
+        "tags": [
+          "AlunoResposta"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/AlunoResposta/AtualizarAlunoResposta": {
+      "put": {
+        "tags": [
+          "AlunoResposta"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoResposta"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoResposta"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoResposta"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/AlunoRespostaObjetiva/CadastrarAlunoRespostaObjetiva": {
+      "post": {
+        "tags": [
+          "AlunoRespostaObjetiva"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoRespostaObjetiva"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoRespostaObjetiva"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoRespostaObjetiva"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/AlunoRespostaObjetiva/RemoverAlunoRespostaObjetivo": {
+      "delete": {
+        "tags": [
+          "AlunoRespostaObjetiva"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/AlunoRespostaObjetiva/BuscarAlunoRespostaObjetiva": {
+      "get": {
+        "tags": [
+          "AlunoRespostaObjetiva"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/AlunoRespostaObjetiva/AtualizarAlunoRespostaObjetiva": {
+      "put": {
+        "tags": [
+          "AlunoRespostaObjetiva"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoRespostaObjetiva"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoRespostaObjetiva"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlunoRespostaObjetiva"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/AlunoRespostaObjetiva/CorrigirProva": {
+      "post": {
+        "tags": [
+          "AlunoRespostaObjetiva"
+        ],
+        "parameters": [
+          {
+            "name": "alunoId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "provaId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/AlunoRespostaObjetiva/PontuacaoAluno": {
+      "get": {
+        "tags": [
+          "AlunoRespostaObjetiva"
+        ],
+        "parameters": [
+          {
+            "name": "alunoId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "provaId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/AlunoRespostaObjetiva/ListarPontuacoesProva/{provaId}": {
+      "get": {
+        "tags": [
+          "AlunoRespostaObjetiva"
+        ],
+        "parameters": [
+          {
+            "name": "provaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Pergunta/CadastrarPergunta": {
+      "post": {
+        "tags": [
+          "Pergunta"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pergunta"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pergunta"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pergunta"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Pergunta/DeletarPergunta": {
+      "delete": {
+        "tags": [
+          "Pergunta"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Pergunta/BuscarPergunta": {
+      "get": {
+        "tags": [
+          "Pergunta"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Pergunta/ListarPergunta": {
+      "get": {
+        "tags": [
+          "Pergunta"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Pergunta/ListarPorProva/{provaId}": {
+      "get": {
+        "tags": [
+          "Pergunta"
+        ],
+        "parameters": [
+          {
+            "name": "provaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Pergunta/AtualizarPergunta": {
+      "put": {
+        "tags": [
+          "Pergunta"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pergunta"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pergunta"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pergunta"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/PerguntaObjetiva/CadastrarPerguntaObjetiva": {
+      "post": {
+        "tags": [
+          "PerguntaObjetiva"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PerguntaObjetiva"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PerguntaObjetiva"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PerguntaObjetiva"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/PerguntaObjetiva/DeletarPerguntaObjetiva": {
+      "delete": {
+        "tags": [
+          "PerguntaObjetiva"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/PerguntaObjetiva/BuscarPerguntaObjetiva": {
+      "get": {
+        "tags": [
+          "PerguntaObjetiva"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/PerguntaObjetiva/ListarPerguntasObjetivas": {
+      "get": {
+        "tags": [
+          "PerguntaObjetiva"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/PerguntaObjetiva/ListarPorProva/{provaId}": {
+      "get": {
+        "tags": [
+          "PerguntaObjetiva"
+        ],
+        "parameters": [
+          {
+            "name": "provaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/PerguntaObjetiva/AtualizarPerguntaObjetiva": {
+      "put": {
+        "tags": [
+          "PerguntaObjetiva"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PerguntaObjetiva"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PerguntaObjetiva"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PerguntaObjetiva"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Professor/CadastrarProfessor": {
+      "post": {
+        "tags": [
+          "Professor"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfessorCreateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfessorCreateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfessorCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Professor/RemoverProfessor": {
+      "delete": {
+        "tags": [
+          "Professor"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Professor/BuscarProfessor": {
+      "get": {
+        "tags": [
+          "Professor"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Professor/ListarProfessor": {
+      "get": {
+        "tags": [
+          "Professor"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Professor/AtualizarProfessor": {
+      "put": {
+        "tags": [
+          "Professor"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Professor"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Professor"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Professor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Prova/CadastrarProva": {
+      "post": {
+        "tags": [
+          "Prova"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prova"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prova"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prova"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Prova/RemoverProva": {
+      "delete": {
+        "tags": [
+          "Prova"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Prova/BuscarProva": {
+      "get": {
+        "tags": [
+          "Prova"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Prova/ListarProva": {
+      "get": {
+        "tags": [
+          "Prova"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Prova/AtualizarProva": {
+      "put": {
+        "tags": [
+          "Prova"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prova"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prova"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prova"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Prova/ListarProvasProfessor/{professorId}": {
+      "get": {
+        "tags": [
+          "Prova"
+        ],
+        "parameters": [
+          {
+            "name": "professorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Prova/BuscarProvaPorCodigo/{codigo}": {
+      "get": {
+        "tags": [
+          "Prova"
+        ],
+        "parameters": [
+          {
+            "name": "codigo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Administrativo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "senha": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataHoraRegistro": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Aluno": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataNascimento": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataHoraRegistro": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "idProva": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prova": {
+            "$ref": "#/components/schemas/Prova"
+          },
+          "respostasObjetivas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlunoRespostaObjetiva"
+            },
+            "nullable": true
+          },
+          "respostas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlunoResposta"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AlunoResposta": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idAluno": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idPergunta": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "resposta": {
+            "type": "string",
+            "nullable": true
+          },
+          "pontuacaoFinal": {
+            "type": "number",
+            "format": "double"
+          },
+          "dataHoraRegistro": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "aluno": {
+            "$ref": "#/components/schemas/Aluno"
+          },
+          "pergunta": {
+            "$ref": "#/components/schemas/Pergunta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AlunoRespostaObjetiva": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idAluno": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idPerguntaObjetiva": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "resposta": {
+            "type": "string"
+          },
+          "pontuacaoFinal": {
+            "type": "number",
+            "format": "double"
+          },
+          "dataHorRegistro": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "aluno": {
+            "$ref": "#/components/schemas/Aluno"
+          },
+          "perguntaObjetiva": {
+            "$ref": "#/components/schemas/PerguntaObjetiva"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HistoricoAlunoDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "prova": {
+            "type": "string",
+            "nullable": true
+          },
+          "pergunta": {
+            "type": "string",
+            "nullable": true
+          },
+          "opcaocorreta": {
+            "type": "string"
+          },
+          "pontuacaofinal": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pergunta": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "titulo": {
+            "type": "string",
+            "nullable": true
+          },
+          "descricao": {
+            "type": "string",
+            "nullable": true
+          },
+          "pontuacao": {
+            "type": "number",
+            "format": "double"
+          },
+          "dataHoraRegistro": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "idProva": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prova": {
+            "$ref": "#/components/schemas/Prova"
+          },
+          "respostas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlunoResposta"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PerguntaObjetiva": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "titulo": {
+            "type": "string",
+            "nullable": true
+          },
+          "descricao": {
+            "type": "string",
+            "nullable": true
+          },
+          "opcaoA": {
+            "type": "string",
+            "nullable": true
+          },
+          "opcaoB": {
+            "type": "string",
+            "nullable": true
+          },
+          "opcaoC": {
+            "type": "string",
+            "nullable": true
+          },
+          "opcaoD": {
+            "type": "string",
+            "nullable": true
+          },
+          "opcaoCorreta": {
+            "type": "string"
+          },
+          "pontuacao": {
+            "type": "number",
+            "format": "double"
+          },
+          "dataHoraRegistro": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "idProva": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prova": {
+            "$ref": "#/components/schemas/Prova"
+          },
+          "respostasObjetivas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlunoRespostaObjetiva"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Professor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "senha": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataHoraRegistro": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "provas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Prova"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProfessorCreateDto": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "senha": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Prova": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "titulo": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataHoraInicio": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataHoraFim": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataHoraRegistro": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "codigo": {
+            "type": "string",
+            "nullable": true
+          },
+          "idProfessor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "professor": {
+            "$ref": "#/components/schemas/Professor"
+          },
+          "alunos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Aluno"
+            },
+            "nullable": true
+          },
+          "perguntasObjetivas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PerguntaObjetiva"
+            },
+            "nullable": true
+          },
+          "perguntas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pergunta"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,3 +1,4 @@
+using ApiProvaOnline.Dto;
 using ApiProvaOnline.Model;
 using ApiProvaOnline.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -15,32 +16,25 @@ namespace ApiProvaOnline.Controllers
             _service = service;
         }
 
-        [HttpPost("LoginProfessor")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
-        {
-            if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Senha))
-                return BadRequest(new { mensagem = "Email e senha são obrigatórios." });
-
-            var professor = await _service.LoginProfessorAsync(request.Email, request.Senha);
-
-            if (professor == null)
-                return Unauthorized(new { mensagem = "Credenciais inválidas." });
-
-            professor.Senha = string.Empty;
-
-            return Ok(new
-            {
-                sucesso = true,
-                professor = professor
-            });
-        }
-
         [HttpPost("CadastrarProfessor")]
-        public async Task<IActionResult> CadastrarProfessor([FromBody] Professor professor)
+        public async Task<IActionResult> CadastrarProfessor([FromBody] ProfessorCreateDto dto)
         {
             try
             {
+                var professor = new Professor
+                {
+                    Id = 0,
+                    Nome = dto.Nome,
+                    Email = dto.Email,
+                    Senha = dto.Senha,
+                    DataHoraRegistro = DateTime.Now
+                };
+
                 await _service.CadastrarProfessorAsync(professor);
+
+                // Não retorne a senha por segurança
+                professor.Senha = string.Empty;
+
                 return Ok(professor);
             }
             catch (Exception ex)

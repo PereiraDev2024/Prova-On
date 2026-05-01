@@ -25,7 +25,10 @@ namespace ApiProvaOnline.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Erro inesperado: " + ex.Message);
+                // Inclui inner exception para facilitar diagnóstico em desenvolvimento.
+                var inner = ex.InnerException?.Message;
+                var message = inner is null ? ex.Message : $"{ex.Message} - {inner}";
+                return StatusCode(500, "Erro inesperado: " + message);
             }
         }
 

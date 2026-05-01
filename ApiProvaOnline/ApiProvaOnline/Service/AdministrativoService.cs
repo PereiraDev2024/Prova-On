@@ -14,6 +14,8 @@ namespace ApiProvaOnline.Service
 
         public async Task CadastrarAdministrativoAsync(Administrativo administrativo)
         {
+            // Garante que o banco gere a PK (evita conflito se o cliente enviar um Id já existente).
+            administrativo.Id = 0;
             administrativo.DataHoraRegistro = DateTime.Now;
             await _repository.AddAsync(administrativo);
             await _repository.SaveChangesAsync();
