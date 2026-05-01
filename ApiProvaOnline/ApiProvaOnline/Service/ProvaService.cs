@@ -69,5 +69,10 @@ namespace ApiProvaOnline.Service
                 Codigo = p.Codigo
             });
         }
+
+        public async Task<Prova?> BuscarProvaPorCodigoAsync(string codigo)
+        {
+            return await _repository.GetByCodigoAsync(codigo);
+        }
     }
 }

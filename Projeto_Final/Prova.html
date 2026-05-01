@@ -3,16 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prova de Português</title>
+<title>Prova</title>
 
 <!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Axios -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<!-- IMask -->
-<script src="https://unpkg.com/imask"></script>
 
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -25,153 +22,216 @@
   <div style="max-width:700px; margin:auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0px 2px 8px rgba(0,0,0,0.15);">
     <div class="text-center mb-4">
       <img src="imagens/logo_provaon.png" alt="Logo ProvaOn" style="max-width:90px;">
-      <h2 style="font-weight:bold; margin-top:10px;">Prova de Português</h2>
+      <h2 id="tituloProva" style="font-weight:bold; margin-top:10px;">Carregando prova...</h2>
       <p style="color:#5f6368; font-size:14px;">Responda todas as questões. Tempo estimado: 60 minutos.</p>
     </div>
 
-    <form id="formProva">
-      <div class="mb-3">
-        <label style="font-weight:500;">1. Assinale a alternativa que contém apenas palavras oxítonas:</label>
-        <select class="form-select" name="q1" required style="border-radius:8px;">
-          <option value="">Selecione...</option>
-          <option value="a">Café, cipó, troféu</option>
-          <option value="b">Mesa, livro, cadeira</option>
-          <option value="c">Carro, menino, escola</option>
-        </select>
+    <div id="perguntasContainer">
+      <div class="text-center py-4">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">Carregando perguntas...</p>
       </div>
+    </div>
 
-      <div class="mb-3">
-        <label style="font-weight:500;">2. Qual é o plural de "cidadão"?</label>
-        <input type="text" class="form-control" name="q2" required style="border-radius:8px;">
-      </div>
-
-      <div class="mb-3">
-        <label style="font-weight:500;">3. Qual frase está correta?</label>
-        <select class="form-select" name="q3" required style="border-radius:8px;">
-          <option value="">Selecione...</option>
-          <option value="a">Os aluno estudam bastante.</option>
-          <option value="b">Os alunos estudam bastante.</option>
-          <option value="c">Os aluno estuda bastante.</option>
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label style="font-weight:500;">4. Complete: "A ____ é a parte da gramática que estuda a formação das palavras."</label>
-        <input type="text" class="form-control" name="q4" required style="border-radius:8px;">
-      </div>
-
-      <div class="mb-3">
-        <label style="font-weight:500;">5. Aponte a alternativa com um advérbio de tempo:</label>
-        <select class="form-select" name="q5" required style="border-radius:8px;">
-          <option value="">Selecione...</option>
-          <option value="a">Ontem</option>
-          <option value="b">Bonito</option>
-          <option value="c">Correr</option>
-        </select>
-      </div>
-
-      <!-- Perguntas Discursivas -->
-      <div class="mb-3">
-        <label style="font-weight:500;">6. Explique a diferença entre oração e período.</label>
-        <textarea class="form-control" name="q6" rows="3" required style="border-radius:8px;"></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label style="font-weight:500;">7. Crie uma frase usando um verbo no pretérito perfeito.</label>
-        <textarea class="form-control" name="q7" rows="3" required style="border-radius:8px;"></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label style="font-weight:500;">8. Dê três exemplos de pronomes pessoais do caso reto.</label>
-        <textarea class="form-control" name="q8" rows="3" required style="border-radius:8px;"></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label style="font-weight:500;">9. Escreva um pequeno parágrafo (3 linhas) descrevendo um lugar que você gosta.</label>
-        <textarea class="form-control" name="q9" rows="4" required style="border-radius:8px;"></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label style="font-weight:500;">10. Qual a importância da leitura para o desenvolvimento da escrita?</label>
-        <textarea class="form-control" name="q10" rows="4" required style="border-radius:8px;"></textarea>
-      </div>
-
-      <div class="text-center mt-4">
-        <button type="submit" class="btn" style="background-color:#673ab7; color:#fff; padding:10px 30px; border-radius:8px; font-weight:500;">Enviar</button>
-        <button type="reset" class="btn" style="background-color:#fff; color:#673ab7; border:1px solid #673ab7; padding:10px 30px; border-radius:8px; font-weight:500; margin-left:10px;">Limpar</button>
-      </div>
-    </form>
+    <div class="text-center mt-4" id="botoesContainer" style="display:none;">
+      <button id="btnEnviar" class="btn" style="background-color:#673ab7; color:#fff; padding:10px 30px; border-radius:8px; font-weight:500;">Enviar Prova</button>
+    </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-window.onload = function() {
-  // Pergunta inicial para iniciar a prova
+const API_BASE_URL = "http://localhost:5150";
+
+const provaId = sessionStorage.getItem('provaId');
+const alunoId = sessionStorage.getItem('alunoId');
+const provaTitulo = sessionStorage.getItem('provaTitulo');
+
+// Redireciona se não houver sessão válida
+if (!provaId || !alunoId) {
+  window.location.href = 'CodigoAcessoProva.html';
+}
+
+let perguntas = [];
+const EXAM_DURATION_SECONDS = 60 * 60;
+let totalSegundos = EXAM_DURATION_SECONDS;
+let intervalo;
+
+async function carregarPerguntas() {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/PerguntaObjetiva/ListarPorProva/${provaId}`);
+    perguntas = response.data;
+
+    if (provaTitulo) {
+      document.getElementById('tituloProva').textContent = provaTitulo;
+    }
+
+    if (perguntas.length === 0) {
+      document.getElementById('perguntasContainer').innerHTML =
+        '<div class="alert alert-warning">Esta prova não possui perguntas cadastradas.</div>';
+      return;
+    }
+
+    renderizarPerguntas(perguntas);
+    document.getElementById('botoesContainer').style.display = 'block';
+  } catch (error) {
+    document.getElementById('perguntasContainer').innerHTML =
+      '<div class="alert alert-danger">Erro ao carregar as perguntas. Verifique se a API está ativa.</div>';
+    console.error(error);
+  }
+}
+
+function renderizarPerguntas(lista) {
+  const container = document.getElementById('perguntasContainer');
+  container.innerHTML = '';
+
+  lista.forEach((p, index) => {
+    const div = document.createElement('div');
+    div.className = 'mb-4';
+    div.innerHTML = `
+      <p style="font-weight:500;">${index + 1}. ${p.titulo}</p>
+      ${p.descricao ? `<p style="color:#5f6368; font-size:14px;">${p.descricao}</p>` : ''}
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="q${p.id}" id="q${p.id}_a" value="A" required>
+        <label class="form-check-label" for="q${p.id}_a">A) ${p.opcaoa}</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="q${p.id}" id="q${p.id}_b" value="B">
+        <label class="form-check-label" for="q${p.id}_b">B) ${p.opcaob}</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="q${p.id}" id="q${p.id}_c" value="C">
+        <label class="form-check-label" for="q${p.id}_c">C) ${p.opcaoc}</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="q${p.id}" id="q${p.id}_d" value="D">
+        <label class="form-check-label" for="q${p.id}_d">D) ${p.opcaod}</label>
+      </div>
+      <hr>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function iniciarTimer() {
+  const timerElemento = document.getElementById('timer');
+  intervalo = setInterval(function () {
+    const minutos = Math.floor(totalSegundos / 60);
+    const segundos = totalSegundos % 60;
+    timerElemento.textContent = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+    if (totalSegundos <= 0) {
+      clearInterval(intervalo);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Tempo esgotado!',
+        text: 'Enviando sua prova automaticamente...',
+        confirmButtonColor: '#673ab7',
+        allowOutsideClick: false
+      }).then(() => enviarProva());
+    }
+    totalSegundos--;
+  }, 1000);
+}
+
+function desabilitarFormulario() {
+  document.querySelectorAll('input[type=radio]').forEach(el => el.disabled = true);
+  document.getElementById('btnEnviar').disabled = true;
+}
+
+async function enviarProva() {
+  desabilitarFormulario();
+  clearInterval(intervalo);
+
+  // Coleta respostas marcadas
+  const respostasParaEnviar = [];
+  for (const p of perguntas) {
+    const selecionado = document.querySelector(`input[name="q${p.id}"]:checked`);
+    if (selecionado) {
+      respostasParaEnviar.push({
+        idAluno: parseInt(alunoId),
+        idPerguntaObjetiva: p.id,
+        resposta: selecionado.value
+      });
+    }
+  }
+
+  if (respostasParaEnviar.length === 0) {
+    Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Você não respondeu nenhuma questão.' });
+    return;
+  }
+
+  try {
+    // Envia cada resposta individualmente
+    for (const resposta of respostasParaEnviar) {
+      await axios.post(`${API_BASE_URL}/AlunoRespostaObjetiva/CadastrarAlunoRespostaObjetiva`, resposta);
+    }
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Prova enviada!',
+      text: 'Suas respostas foram registradas com sucesso.',
+      confirmButtonColor: '#673ab7',
+      allowOutsideClick: false
+    }).then(() => {
+      window.location.href = 'Resultado.html';
+    });
+  } catch (err) {
+    console.error(err);
+    Swal.fire({
+      icon: 'error',
+      title: 'Erro ao enviar',
+      text: 'Ocorreu um erro ao enviar a prova. Tente novamente.',
+      confirmButtonColor: '#673ab7'
+    });
+    // Reabilita para nova tentativa apenas se o tempo ainda não expirou
+    document.querySelectorAll('input[type=radio]').forEach(el => el.disabled = false);
+    document.getElementById('btnEnviar').disabled = false;
+    if (totalSegundos > 0) {
+      iniciarTimer();
+    }
+  }
+}
+
+document.getElementById('btnEnviar').addEventListener('click', async function () {
+  // Verificar se todas as perguntas foram respondidas
+  const naoRespondidas = perguntas.filter(p => !document.querySelector(`input[name="q${p.id}"]:checked`));
+  if (naoRespondidas.length > 0) {
+    const result = await Swal.fire({
+      icon: 'question',
+      title: 'Perguntas sem resposta',
+      text: `Você deixou ${naoRespondidas.length} questão(ões) sem resposta. Deseja enviar mesmo assim?`,
+      showCancelButton: true,
+      confirmButtonText: 'Sim, enviar',
+      cancelButtonText: 'Voltar',
+      confirmButtonColor: '#673ab7'
+    });
+    if (!result.isConfirmed) return;
+  }
+  await enviarProva();
+});
+
+// Inicialização
+window.onload = function () {
   Swal.fire({
     title: 'Deseja iniciar a prova?',
-    text: "Você terá 60 minutos para completá-la.",
+    text: 'Você terá 60 minutos para completá-la.',
     icon: 'question',
     showCancelButton: true,
     confirmButtonText: 'Sim',
     cancelButtonText: 'Não',
+    confirmButtonColor: '#673ab7',
     allowOutsideClick: false,
     allowEscapeKey: false
   }).then((result) => {
-    if(!result.isConfirmed){
+    if (!result.isConfirmed) {
       window.location.href = 'CodigoAcessoProva.html';
     } else {
+      carregarPerguntas();
       iniciarTimer();
     }
   });
-}
-
-let totalSegundos = 60*60; // 60 minutos
-let intervalo;
-function iniciarTimer(){
-  const timerElemento = document.getElementById('timer');
-  intervalo = setInterval(function(){
-    const minutos = Math.floor(totalSegundos/60);
-    const segundos = totalSegundos%60;
-    timerElemento.textContent = `${String(minutos).padStart(2,'0')}:${String(segundos).padStart(2,'0')}`;
-    if(totalSegundos<=0){
-      clearInterval(intervalo);
-      Swal.fire({
-        icon:'info',
-        title:'Tempo esgotado!',
-        text:'O tempo da prova terminou.',
-        confirmButtonColor:'#673ab7'
-      });
-      document.getElementById('formProva').querySelectorAll('input,textarea,select,button').forEach(el=>el.disabled=true);
-    }
-    totalSegundos--;
-  },1000);
-}
-
-// Envio via Axios com SweetAlert2
-document.getElementById('formProva').addEventListener('submit', async function(e){
-  e.preventDefault();
-  const dados = new FormData(this);
-  const jsonData = {};
-  dados.forEach((valor,chave)=> jsonData[chave]=valor);
-  try{
-    await axios.post('https://exemplo.com/enviar-prova', jsonData);
-    Swal.fire({
-      icon:'success',
-      title:'Prova enviada!',
-      text:'Sua prova foi enviada com sucesso.',
-      confirmButtonColor:'#673ab7'
-    });
-  } catch(err){
-    Swal.fire({
-      icon:'error',
-      title:'Erro!',
-      text:'Ocorreu um erro ao enviar a prova.',
-      confirmButtonColor:'#673ab7'
-    });
-  }
-});
+};
 </script>
 </body>
 </html>

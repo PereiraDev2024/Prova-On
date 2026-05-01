@@ -59,5 +59,10 @@ namespace ApiProvaOnline.Service
         {
             return await _repository.GetHistoricoAsync(alunoId);
         }
+
+        public async Task<IEnumerable<Aluno>> ListarPorProvaAsync(int provaId)
+        {
+            return await _repository.GetByProvaIdAsync(provaId);
+        }
     }
 }

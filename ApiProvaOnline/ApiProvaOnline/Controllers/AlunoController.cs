@@ -105,5 +105,19 @@ namespace ApiProvaOnline.Controllers
                 return BadRequest("Erro inesperado: " + ex.Message);
             }
         }
+
+        [HttpGet("ListarAlunosPorProva/{provaId}")]
+        public async Task<IActionResult> ListarAlunosPorProva(int provaId)
+        {
+            try
+            {
+                var alunos = await _service.ListarPorProvaAsync(provaId);
+                return Ok(alunos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro inesperado: " + ex.Message);
+            }
+        }
     }
 }

@@ -28,10 +28,21 @@
     </ul>
   </div>
 
-  <!-- Alunos da prova -->
+  <!-- Alunos e pontuações da prova -->
   <div class="mt-5" id="alunosContainer" style="display:none;">
-    <h4>Alunos que fizeram a prova: <span id="tituloProvaSelecionada"></span></h4>
-    <ul class="list-group" id="listaAlunos"></ul>
+    <h4>Resultados da prova: <span id="tituloProvaSelecionada"></span></h4>
+    <table class="table table-bordered table-sm mt-3" id="tabelaAlunos">
+      <thead class="table-light">
+        <tr>
+          <th>Aluno</th>
+          <th class="text-end">Pontuação</th>
+        </tr>
+      </thead>
+      <tbody id="corpoTabelaAlunos"></tbody>
+    </table>
+    <div id="semResultados" class="alert alert-info" style="display:none;">
+      Nenhum aluno realizou esta prova ainda.
+    </div>
   </div>
 </div>
 
@@ -73,14 +84,14 @@
 </div>
 
 <script>
-  const API_BASE_URL = "https://sua-api.com"; // Atualize com sua URL real da API
+  const API_BASE_URL = "http://localhost:5150";
 
   async function buscarProvasDoProfessor() {
     const idProfessor = document.getElementById("professorId").value;
     if (!idProfessor) return alert("Informe o ID do professor.");
 
     try {
-      const response = await axios.get(`${API_BASE_URL}/provas/professor/${idProfessor}`);
+      const response = await axios.get(`${API_BASE_URL}/Prova/ListarProvasProfessor/${idProfessor}`);
       renderizarProvas(response.data);
     } catch (error) {
       console.error(error);
@@ -92,16 +103,21 @@
     const lista = document.getElementById("listaProvas");
     lista.innerHTML = "";
 
+    if (!provas || provas.length === 0) {
+      lista.innerHTML = '<li class="list-group-item text-muted">Nenhuma prova encontrada.</li>';
+      return;
+    }
+
     provas.forEach(prova => {
       const li = document.createElement("li");
       li.className = "list-group-item d-flex justify-content-between align-items-center";
       li.innerHTML = `
         <div>
           <strong>${prova.titulo}</strong><br>
-          Código: ${prova.codigo} | Início: ${new Date(prova.dataHoraInicio).toLocaleString()} | Fim: ${new Date(prova.dataHoraFim).toLocaleString()}
+          Código: ${prova.codigo} | Cadastro: ${new Date(prova.dataHoraRegistro).toLocaleString()}
         </div>
         <div>
-          <button class="btn btn-sm btn-info" onclick="verAlunos(${prova.id}, '${prova.titulo}')">Alunos</button>
+          <button class="btn btn-sm btn-info" onclick="verPontuacoes(${prova.id}, '${prova.titulo}')">Resultados</button>
           <button class="btn btn-sm btn-warning" onclick="abrirModalEditar(${prova.id})">Editar</button>
           <button class="btn btn-sm btn-danger" onclick="removerProva(${prova.id})">Apagar</button>
         </div>
@@ -110,34 +126,48 @@
     });
   }
 
-  async function verAlunos(provaId, titulo) {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/provas/${provaId}/alunos`);
-      document.getElementById("alunosContainer").style.display = "block";
-      document.getElementById("tituloProvaSelecionada").textContent = titulo;
+  async function verPontuacoes(provaId, titulo) {
+    document.getElementById("alunosContainer").style.display = "block";
+    document.getElementById("tituloProvaSelecionada").textContent = titulo;
+    const tbody = document.getElementById("corpoTabelaAlunos");
+    const semResultados = document.getElementById("semResultados");
+    tbody.innerHTML = '<tr><td colspan="2" class="text-center">Carregando...</td></tr>';
+    semResultados.style.display = "none";
 
-      const lista = document.getElementById("listaAlunos");
-      lista.innerHTML = "";
-      response.data.forEach(aluno => {
-        const li = document.createElement("li");
-        li.className = "list-group-item";
-        li.textContent = aluno.nome; // ajuste conforme seu modelo
-        lista.appendChild(li);
+    try {
+      const response = await axios.get(`${API_BASE_URL}/AlunoRespostaObjetiva/ListarPontuacoesProva/${provaId}`);
+      const pontuacoes = response.data;
+
+      tbody.innerHTML = "";
+      if (!pontuacoes || pontuacoes.length === 0) {
+        tbody.innerHTML = "";
+        semResultados.style.display = "block";
+        return;
+      }
+
+      pontuacoes.forEach(p => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${p.aluno}</td>
+          <td class="text-end"><strong>${parseFloat(p.pontuacaoFinal).toFixed(2)}</strong></td>
+        `;
+        tbody.appendChild(tr);
       });
     } catch (error) {
-      alert("Erro ao buscar alunos.");
+      tbody.innerHTML = '<tr><td colspan="2" class="text-danger text-center">Erro ao buscar resultados.</td></tr>';
+      console.error(error);
     }
   }
 
   async function abrirModalEditar(id) {
     try {
-      const response = await axios.get(`${API_BASE_URL}/provas/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/Prova/BuscarProva?Id=${id}`);
       const prova = response.data;
 
       document.getElementById("editId").value = prova.id;
       document.getElementById("editTitulo").value = prova.titulo;
-      document.getElementById("editInicio").value = prova.dataHoraInicio.slice(0,16);
-      document.getElementById("editFim").value = prova.dataHoraFim.slice(0,16);
+      document.getElementById("editInicio").value = prova.dataHoraInicio ? prova.dataHoraInicio.slice(0, 16) : '';
+      document.getElementById("editFim").value = prova.dataHoraFim ? prova.dataHoraFim.slice(0, 16) : '';
       document.getElementById("editCodigo").value = prova.codigo;
 
       new bootstrap.Modal(document.getElementById("editarModal")).show();
@@ -157,7 +187,7 @@
     const idProfessor = document.getElementById("professorId").value;
 
     try {
-      await axios.put(`${API_BASE_URL}/provas/${id}`, {
+      await axios.put(`${API_BASE_URL}/Prova/AtualizarProva`, {
         id: parseInt(id),
         titulo,
         dataHoraInicio: inicio,
@@ -178,7 +208,7 @@
     if (!confirm("Deseja realmente apagar esta prova?")) return;
 
     try {
-      await axios.delete(`${API_BASE_URL}/provas/${id}`);
+      await axios.delete(`${API_BASE_URL}/Prova/RemoverProva?Id=${id}`);
       buscarProvasDoProfessor();
     } catch (error) {
       alert("Erro ao apagar prova.");
